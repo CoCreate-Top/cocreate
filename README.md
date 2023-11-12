@@ -1,27 +1,37 @@
 # Cocreate
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.0.
+CoCreate is the ultimate platform for turning solo ambitions into collaborative triumphs. Connect with like-minded individuals, share your project vision, and find the perfect team to bring your ideas to life. 
 
-## Development server
+## Requirements
+Each part of platform has it's own requirements but if you want to use docker you will need:
+- [Docker](https://www.docker.com)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Docker explained
 
-## Code scaffolding
+This repository is a collection of 3 Docker containers that can be used to run the Cocreate platform.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+1. *angular*
+2. *node*
+3. *postgres*
 
-## Build
+If you want to run all containers in Docker, you can use the `docker-compose.yml` file. You can run this with:
+```
+docker compose up
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+If you want to develop on the frontend side, you can just run the backend containers (*node* and *postgres*) with:
+```
+docker compose --file compose.backend.yml up
+```
 
-## Running unit tests
+If you want to develop on the backend side, you can run the *postgres* container with:
+```
+docker compose --file compose.database.yml up
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Postgres container
+If the *postgres* container is running, you can connect to it with API server od other database tools (I recommend Beekeeper Studio)
 
-## Running end-to-end tests
+Database informations are found in `.env` file. They can be changed there too.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+The database should be persistent (it should save in `cocreate-database/`), but I don't exactly know how will it work with git. If this will be a problem, we will need to host a database on another server and connect it with API server.
