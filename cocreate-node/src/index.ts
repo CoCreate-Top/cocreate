@@ -9,10 +9,10 @@ const port = process.env.NODE_PORT
 
 const pool = new Pool({
     user: 'cocreate',
-    host: '127.0.0.1',
+    host: '93.103.55.194',
     database: 'cocreate',
-    password: 'cocreate2023',
-    port: 5432,
+    password: 'cocreate_denis1234',
+    port: 42069,
 })
 
 app.get('/', (req: Request, res: Response) => {
