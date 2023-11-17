@@ -17,3 +17,10 @@ Postgresql database:
 
 > `npm run dev` will run both `tsc --watch` and `nodemon` concurrently
 
+## Recompose instructions
+
+1. run `docker compose down`
+
+2. run `docker rmi $(docker image ls -aq)`
+
+3. run `docker compose up`
