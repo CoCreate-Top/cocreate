@@ -22,6 +22,13 @@ app.get('/', (req: Request, res: Response) => {
     })
 })
 
+app.post('/user', (req: Request, res: Response) => {
+    pool.query('INSERT INTO test (name) VALUES ($1)', ['denis'], (error: Error, results: any) => {
+        if (error) throw error
+        res.status(201).send(`User added with ID: ${results.insertId}`)
+    })
+})
+
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 })
