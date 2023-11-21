@@ -52,10 +52,9 @@ app.post("/signup", (req: Request, res: Response) => {
             // b63K/D03WFBktWy552L5Xu - salt
             // ibmiD5SxCrKg9kHCqOYaZwxRjIg14u2 - hashed password
 
-            pool.query('INSERT INTO "Users" (name, email, password) VALUES ($1, $2, $3)', [name, email, hash], (error: Error, results: any) => {
+            pool.query('INSERT INTO "Users" (name, email, password) VALUES ($1, $2, $3)', [name, email, hash], (error: Error) => {
                 if (error) return res.status(400).send(error);
-                console.log(results);
-                res.status(201);
+                res.status(201).send('User created');
             });
         });
     });
