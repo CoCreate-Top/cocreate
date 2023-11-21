@@ -39,7 +39,7 @@ app.post("/signup", (req: Request, res: Response) => {
     const { name, email, password } = req.body;
 
     // generates salt with number rounds of hashing provided in .env
-    bcrypt.genSalt(process.env.SALT_ROUNDS, (err: Error, salt: string) => {
+    bcrypt.genSalt(Number(process.env.SALT_ROUNDS), (err: Error, salt: string) => {
         if (err) return res.status(400).send(err);
 
         // hashes password with salt
@@ -96,7 +96,7 @@ app.post("/login", (req: Request, res: Response) => {
 
 //TODO: create a logout endpoint, which invalidates the refresh token and access token
 app.post('/logout', (req: Request, res: Response) => {
-    
+
 });
 
 app.get('/users', (req: Request, res: Response) => {
