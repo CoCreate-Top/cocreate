@@ -1,20 +1,20 @@
 import express, { Express, Request, Response } from 'express'
 import dotenv from 'dotenv'
-const Pool = require('pg').Pool
+import { Pool } from 'pg'
+import bcrypt from 'bcrypt'
 
 dotenv.config()
 
 const app: Express = express()
 const port = process.env.NODE_PORT
 
-const bcrypt = require('bcrypt')
 
 const pool = new Pool({
     user: 'cocreate',
     host: process.env.DB_HOST,
     database: 'cocreate',
     password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
+    port: Number(process.env.DB_PORT),
 });
 
 app.use(express.json());
@@ -39,11 +39,11 @@ app.post("/signup", (req: Request, res: Response) => {
     const { name, email, password } = req.body;
 
     // generates salt with number rounds of hashing provided in .env
-    bcrypt.genSalt(Number(process.env.SALT_ROUNDS), (err: Error, salt: string) => {
+    bcrypt.genSalt(Number(process.env.SALT_ROUNDS), (err: Error | undefined, salt: string) => {
         if (err) return res.status(400).send(err);
 
         // hashes password with salt
-        bcrypt.hash(password, salt, (err: Error, hash: string) => {
+        bcrypt.hash(password, salt, (err: Error | undefined, hash: string) => {
             if (err) return res.status(400).send(err);
 
             //? password is hashed in the following format: $2b$10$b63K/D03WFBktWy552L5XuibmiD5SxCrKg9kHCqOYaZwxRjIg14u2
@@ -81,7 +81,7 @@ app.post("/login", (req: Request, res: Response) => {
             return res.status(401).send('Invalid credentials')
         } else {
             // if user exists compare password
-            bcrypt.compare(password, results.rows[0].password, (err: Error, result: boolean) => {
+            bcrypt.compare(password, results.rows[0].password, (err: Error | undefined, result: boolean) => {
                 if (err) return res.status(400).send(err);
                 if (result) {
                     res.status(200).send('Login successful')
