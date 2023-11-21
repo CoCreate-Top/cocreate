@@ -26,8 +26,16 @@ app.get('/', (req: Request, res: Response) => {
     });
 });
 
-// signup endpoint - needs name, email and password in body
-app.post('/signup', (req: Request, res: Response) => {
+
+/**
+ * Handles user signup. 
+ * 
+ * Takes name, email and password from request body. 
+ * Generates salt and hashes password using bcrypt.
+ * Inserts new user with hashed password into database.
+ * Returns 201 status on success.
+*/
+app.post("/signup", (req: Request, res: Response) => {
     const { name, email, password } = req.body;
 
     // generates salt with number rounds of hashing provided in .env
@@ -54,15 +62,23 @@ app.post('/signup', (req: Request, res: Response) => {
 });
 
 //TODO: creating access tokens, refresh tokens
-// login endpoint - needs email and password in body
-app.post('/login', (req: Request, res: Response) => {
+
+/**
+ * Login endpoint that takes email and password in request body, 
+ * queries for user by email, compares password with bcrypt, 
+ * and returns 200 if valid credentials or 401 if invalid.
+*/
+app.post("/login", (req: Request, res: Response) => {
     const { email, password } = req.body;
-    
+
     // gets user by email (email is unique)
-    pool.query('SELECT * FROM "Users" WHERE email = $1', [email], (error: Error, results: any) => {
-        if (error) res.status(400).send(error);
+    pool.query(
+        'SELECT * FROM "Users" WHERE email = $1',
+        [email],
+        (error: Error, results: any) => {
+            if (error) return res.status(400).send(error);
         if (results.rows.length == 0) {
-            res.status(401).send('Invalid credentials')
+            return res.status(401).send('Invalid credentials')
         } else {
             // if user exists compare password
             bcrypt.compare(password, results.rows[0].password, (err: Error, result: boolean) => {
@@ -76,6 +92,7 @@ app.post('/login', (req: Request, res: Response) => {
         }
     });
 });
+
 
 //TODO: create a logout endpoint, which invalidates the refresh token and access token
 app.post('/logout', (req: Request, res: Response) => {
