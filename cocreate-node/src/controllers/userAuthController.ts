@@ -42,7 +42,6 @@ export const userSignUp = (req: Request, res: Response) => {
  * and returns 200 if valid credentials or 401 if invalid.
 */
 export const userLogin = (req: Request, res: Response) => {
-    console.log(req.body);
     const { email, password } = req.body;
 
     // gets user by email (email is unique)
