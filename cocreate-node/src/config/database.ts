@@ -4,9 +4,9 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const pool = new Pool({
-    user: 'cocreate',
+    user: process.env.DB_USER,
     host: process.env.DB_HOST,
-    database: 'cocreate',
+    database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
     port: Number(process.env.DB_PORT),
 });
