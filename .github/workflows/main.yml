@@ -2,7 +2,7 @@ name: Prskalnik Development deploy
 on:
   push:
     branches: 
-     - '6-cicd'
+     - 'master'
 jobs:
   development-deploy:
     runs-on: [self-hosted]
