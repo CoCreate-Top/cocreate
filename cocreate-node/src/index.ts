@@ -1,26 +1,34 @@
-import express, { Express, Request, Response } from 'express'
+import express, { Express } from 'express'
 import dotenv from 'dotenv'
-const Pool = require('pg').Pool
+import userAuthRoutes from './routes/userAuthRoutes'
 
 dotenv.config()
 
 const app: Express = express()
-const port = process.env.NODE_PORT
+const port = process.env.NODE_PORT || 8000
 
-const pool = new Pool({
-    user: 'cocreate',
-    host: '93.103.55.194',
-    database: 'cocreate',
-    password: 'cocreate_denis1234',
-    port: 42069,
-})
+app.use(express.json());
+app.use('/api/auth', userAuthRoutes);
 
-app.get('/', (req: Request, res: Response) => {
-    pool.query('SELECT * FROM test', (error: Error, results: any) => {
-        if (error) throw error
-        res.status(200).json(results.rows)
-    })
-})
+app.get("/ping", (req, res) => {
+    res.status(200).json({ message: "pong" });
+});
+
+// app.get('/', (req: Request, res: Response) => {
+//     pool.query('SELECT * FROM "Users"', (error: Error, results: any) => {
+//         if (error) return res.status(400).send(error);
+//         res.status(200).json(results.rows)
+//     });
+// });
+
+//TODO: creating access tokens, refresh tokens
+
+// app.get('/users', (req: Request, res: Response) => {
+//     pool.query('SELECT * FROM "Users"', (error: Error, results: any) => {
+//         if (error) throw error
+//         res.status(201).send(results.rows)
+//     });
+// });
 
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
