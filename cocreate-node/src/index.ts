@@ -3,6 +3,7 @@ import * as swaggerUi from 'swagger-ui-express';
 
 import dotenv from 'dotenv'
 import userAuthRoutes from './routes/userAuthRoutes'
+import apiRoutes from './routes/apiRoutes'
 import { googleOAuthHandler } from './controllers/sessionsController'
 
 dotenv.config()
@@ -16,6 +17,7 @@ const port = process.env.NODE_PORT || 8000
 
 app.use(express.json());
 app.use('/api/auth', userAuthRoutes);
+app.use('/api', apiRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get("/ping", (req, res) => {
