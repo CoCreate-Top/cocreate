@@ -1,14 +1,21 @@
 import express, { Express } from 'express'
+import * as swaggerUi from 'swagger-ui-express';
+
 import dotenv from 'dotenv'
 import userAuthRoutes from './routes/userAuthRoutes'
 
 dotenv.config()
 
 const app: Express = express()
+
+// Swagger configuration
+const swaggerDocument = require('../swagger/swagger-output.json');
+
 const port = process.env.NODE_PORT || 8000
 
 app.use(express.json());
 app.use('/api/auth', userAuthRoutes);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get("/ping", (req, res) => {
     res.status(200).json({ message: "pong" });
@@ -32,4 +39,4 @@ app.get("/ping", (req, res) => {
 
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-})
+});
