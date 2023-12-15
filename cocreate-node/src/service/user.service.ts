@@ -1,6 +1,6 @@
 import axios from "axios";
 import qs from "qs";
-import { googleClientID, googleClientSecret, googleOauthRedirectUrl } from "../config/database";
+import pool, { googleClientID, googleClientSecret, googleOauthRedirectUrl } from "../config/database";
 
 interface GoogleTokensResult {
     access_token: string;
@@ -29,6 +29,19 @@ export async function getGoogleOAuthTokens(code: string): Promise<GoogleTokensRe
                 },
         });
         return response.data;
+    } catch (error: any) {
+        console.error(error);
+        throw new Error(error.message);
+    }
+}
+
+export async function upsertUser(name: string, email: string) {
+    try {
+        await pool.query(
+            `INSERT INTO users (name, email) VALUES ($1, $2)
+            ON CONFLICT (email) DO UPDATE SET name = $1, email = $2`,
+            [name, email]
+        );
     } catch (error: any) {
         console.error(error);
         throw new Error(error.message);
