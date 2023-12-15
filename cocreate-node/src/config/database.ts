@@ -1,7 +1,12 @@
 import { Pool } from "pg";
 import dotenv from 'dotenv'
 
-dotenv.config()
+dotenv.config();
+
+export const googleClientID = process.env.GOOGLE_CLIENT_ID;
+export const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+export const googleOauthRedirectUrl = process.env.GOOGLE_OAUTH_REDIRECT_URL;
+export const origin = "http://localhost:4200";
 
 const pool = new Pool({
     user: process.env.DB_USER,
