@@ -1,8 +1,6 @@
-import { Request, Response } from "express";
+import { Request, Response, application } from "express";
 import pool from "../config/database";
 import { Project } from "../types/project";
-
-
 
 /**
  * Gets all projects.
@@ -24,7 +22,7 @@ export const getProjects = (req: Request, res: Response) => {
  * Returns the project data if found, error if not.
  */
 export const getProject = (req: Request, res: Response) => {
-    const { id } = req.body;
+    const id = req.params.id;
     pool.query(
         'SELECT * FROM "Projects" WHERE id = $1',
         [id],
@@ -64,7 +62,8 @@ export const createProject = (req: Request, res: Response) => {
  * Returns the updated project data.
  */
 export const updateProject = (req: Request, res: Response) => {
-    const { id, title, creator, status, description } = req.body;
+    const id = req.params.id;
+    const { title, creator, status, description } = req.body;
 
     pool.query(
         'SELECT * FROM "Projects" WHERE id = $1',
@@ -101,13 +100,83 @@ export const updateProject = (req: Request, res: Response) => {
  */
 
 export const deleteProject = (req: Request, res: Response) => {
-    const { id } = req.body;
+    const id = req.params.id;
     pool.query(
         'DELETE FROM "Projects" WHERE id = $1',
         [id],
         (error: Error, result: any) => {
             if (error) return res.status(400).send(error);
             res.status(200).send("Project deleted.");
+        }
+    );
+};
+
+export const newApplication = (req: Request, res: Response) => {
+    const projectId = req.params.id;
+    const { id, profession } = req.body;
+
+    pool.query(
+        'INSERT INTO "Applications" (project_id, user_id, profession) VALUES ($1, $2, $3)',
+        [projectId, id, profession],
+        (error: Error, result: any) => {
+            if (error) return res.status(400).send(error);
+            res.status(200).send("Application created.");
+        }
+    );
+};
+
+export const getApplicationsPerProf = (req: Request, res: Response) => {
+    const id = req.params.id;
+
+    pool.query(
+        'SELECT profession, COUNT(*) FROM "Applications" WHERE project_id = $1 GROUP BY profession',
+        [id],
+        (error: Error, result: any) => {
+            if (error) return res.status(400).send(error);
+            let applications = result.rows;
+            var dict: { [key: string]: number } = {};
+            applications.forEach(
+                (app: any) => (dict[app.profession] = app.count)
+            );
+            res.status(200).send(dict);
+        }
+    );
+};
+
+export const confirmApplication = (req: Request, res: Response) => {
+    const projectId = req.params.id;
+    const { id } = req.body;
+    pool.query(
+        'UPDATE "Applications" SET status = ' + "'approved'" + ' WHERE user_id = $1 AND project_id = $2',
+        [id, projectId],
+        (error: Error, result: any) => {
+            if (error) return res.status(400).send(error);
+            res.status(200).send("Application confirmed.");
+        }
+    );
+};
+
+export const rejectApplication = (req: Request, res: Response) => {
+    const projectId = req.params.id;
+    const { id } = req.body;
+    pool.query(
+        'UPDATE "Applications" SET status = ' + "'rejected'" + ' WHERE user_id = $1 AND project_id = $2',
+        [id, projectId],
+        (error: Error, result: any) => {
+            if (error) return res.status(400).send(error);
+            res.status(200).send("Application rejected.");
+        }
+    );
+};
+
+export const getApplications = (req: Request, res: Response) => {
+    const id = req.params.id;
+    pool.query(
+        'SELECT * FROM "Applications" WHERE project_id = $1',
+        [id],
+        (error: Error, result: any) => {
+            if (error) return res.status(400).send(error);
+            res.status(200).send(result.rows);
         }
     );
 };
