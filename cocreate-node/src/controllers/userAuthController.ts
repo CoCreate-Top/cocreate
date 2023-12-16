@@ -28,8 +28,9 @@ export const userSignUp = (req: Request, res: Response) => {
             // b63K/D03WFBktWy552L5Xu - salt
             // ibmiD5SxCrKg9kHCqOYaZwxRjIg14u2 - hashed password
 
-            pool.query('INSERT INTO "Users" (name, email, password) VALUES ($1, $2, $3)', [name, email, hash], (error: Error) => {
+            pool.query('INSERT INTO "users" (name, email, password) VALUES ($1, $2, $3) RETURNING id', [name, email, hash], (error: Error, result) => {
                 if (error) return res.status(400).send(error);
+                req.session.userId = result.rows[0].id;
                 res.status(201).send('User created');
             });
         });
@@ -46,7 +47,7 @@ export const userLogin = (req: Request, res: Response) => {
 
     // gets user by email (email is unique)
     pool.query(
-        'SELECT * FROM "Users" WHERE email = $1',
+        'SELECT * FROM "users" WHERE email = $1',
         [email],
         (error: Error, results: any) => {
             if (error) return res.status(400).send(error);
@@ -57,6 +58,7 @@ export const userLogin = (req: Request, res: Response) => {
             bcrypt.compare(password, results.rows[0].password, (err: Error | undefined, result: boolean) => {
                 if (err) return res.status(400).send(err);
                 if (result) {
+                    req.session.userId = results.rows[0].id;
                     res.status(200).send('Login successful')
                 } else {
                     res.status(401).send('Invalid credentials')
@@ -66,8 +68,16 @@ export const userLogin = (req: Request, res: Response) => {
     });
 };
 
-
-//TODO: create a logout endpoint, which invalidates the refresh token and access token
 export const userLogout = (req: Request, res: Response) => {
-
+    if (req.session.userId) {
+        req.session.destroy((err) => {
+            if (err) {
+                return res.status(500).send("Could not log out");
+            } else {
+                return res.status(200).send("Logged out successfully");
+            }
+        });
+    } else {
+        return res.status(200).send("No user logged in");
+    }
 };
