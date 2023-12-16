@@ -15,9 +15,9 @@ export async function getGoogleOAuthTokens(code: string): Promise<GoogleTokensRe
 
     const values = {
         code,
-        clientId : googleClientID,
-        clientSecret : googleClientSecret,
-        redirectUri : googleOauthRedirectUrl,
+        client_id : googleClientID,
+        client_secret : googleClientSecret,
+        redirect_uri : googleOauthRedirectUrl,
         grant_type : "authorization_code",
     };
 
@@ -30,7 +30,8 @@ export async function getGoogleOAuthTokens(code: string): Promise<GoogleTokensRe
         });
         return response.data;
     } catch (error: any) {
-        console.error(error);
+        console.error("Error in getGoogleOauthTokens: ");
+        console.error(error.response.data);
         throw new Error(error.message);
     }
 }
@@ -43,6 +44,7 @@ export async function upsertUser(name: string, email: string) {
             [name, email]
         );
     } catch (error: any) {
+        console.error("Error in upsertUser: ");
         console.error(error);
         throw new Error(error.message);
     }
