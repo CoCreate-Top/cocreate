@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import pool from "../config/database";
 import { Project } from "../models/projectModel";
+import { Application } from "../models/applicationModel";
 
 /**
  * Gets all projects.
@@ -8,7 +9,7 @@ import { Project } from "../models/projectModel";
  * Queries the "Projects" table and returns all rows.
  */
 export const getProjects = (req: Request, res: Response) => {
-    pool.query('SELECT * FROM "Projects"', (error: Error, result: any) => {
+    pool.query('SELECT * FROM "projects"', (error: Error, result: any) => {
         if (error) return res.status(400).send(error);
         res.status(200).send(result.rows);
     });
@@ -24,10 +25,11 @@ export const getProjects = (req: Request, res: Response) => {
 export const getProject = (req: Request, res: Response) => {
     const id = req.params.id;
     pool.query(
-        'SELECT * FROM "Projects" WHERE id = $1',
+        'SELECT * FROM "projects" WHERE id = $1',
         [id],
         (error: Error, result: any) => {
             if (error) return res.status(400).send(error);
+            if (result.rowCount === 0) return res.status(404).send("Project not found");
             res.status(200).send(result.rows);
         }
     );
@@ -41,10 +43,10 @@ export const getProject = (req: Request, res: Response) => {
  * Returns the new project data including auto-generated ID.
  */
 export const createProject = (req: Request, res: Response) => {
-    const { title, creator, description } = req.body;
+    const { title, description } = req.body;
     pool.query(
-        'INSERT INTO "Projects" (title, creator, description) VALUES ($1, $2, $3) RETURNING *',
-        [title, creator, description],
+        'INSERT INTO "projects" (title, creator, description) VALUES ($1, $2, $3) RETURNING *',
+        [title, req.session.userId, description],
         (error: Error, result: any) => {
             if (error) return res.status(400).send(error);
             res.status(201).send(result.rows);
@@ -66,7 +68,7 @@ export const updateProject = (req: Request, res: Response) => {
     const { title, creator, status, description } = req.body;
 
     pool.query(
-        'SELECT * FROM "Projects" WHERE id = $1',
+        'SELECT * FROM "projects" WHERE id = $1',
         [id],
         (error: Error, result: any) => {
             if (error) return res.status(400).send(error);
@@ -74,8 +76,11 @@ export const updateProject = (req: Request, res: Response) => {
                 return res.status(404).send("Project not found.");
             }
             const project: Project = result.rows[0];
+            if (project.creator !== req.session.userId) {
+                return res.status(403).send("Unauthorized");
+            }
             pool.query(
-                'UPDATE "Projects" SET title = $1, creator = $2, description = $3, status = $4 WHERE id = $5 RETURNING *',
+                'UPDATE "projects" SET title = $1, creator = $2, description = $3, status = $4 WHERE id = $5 RETURNING *',
                 [
                     title ? title : project.title,
                     creator ? creator : project.creator,
@@ -102,22 +107,33 @@ export const updateProject = (req: Request, res: Response) => {
 export const deleteProject = (req: Request, res: Response) => {
     const id = req.params.id;
     pool.query(
-        'DELETE FROM "Projects" WHERE id = $1',
+        'SELECT creator FROM "projects" WHERE id = $1',
         [id],
         (error: Error, result: any) => {
             if (error) return res.status(400).send(error);
-            res.status(200).send("Project deleted.");
+            if (result.rows.length === 0) return res.status(404).send("Project not found.");
+            if (result.rows[0].creator !== req.session.userId) {
+                return res.status(403).send("Unauthorized");
+            }
+            pool.query(
+                'DELETE FROM "projects" WHERE id = $1',
+                [id],
+                (error: Error, result: any) => {
+                    if (error) return res.status(400).send(error);
+                    res.status(200).send("Project deleted.");
+                }
+            );
         }
     );
 };
 
 export const newApplication = (req: Request, res: Response) => {
     const projectId = req.params.id;
-    const { id, profession } = req.body;
+    const { profession } = req.body;
 
     pool.query(
-        'INSERT INTO "Applications" (project_id, user_id, profession) VALUES ($1, $2, $3)',
-        [projectId, id, profession],
+        'INSERT INTO "applications" (project_id, user_id, profession) VALUES ($1, $2, $3)',
+        [projectId, req.session.userId, profession],
         (error: Error, result: any) => {
             if (error) return res.status(400).send(error);
             res.status(200).send("Application created.");
@@ -129,10 +145,11 @@ export const getApplicationsPerProf = (req: Request, res: Response) => {
     const id = req.params.id;
 
     pool.query(
-        'SELECT profession, COUNT(*) FROM "Applications" WHERE project_id = $1 GROUP BY profession',
+        'SELECT profession, COUNT(*) FROM "applications" WHERE project_id = $1 GROUP BY profession',
         [id],
         (error: Error, result: any) => {
             if (error) return res.status(400).send(error);
+            if (result.rows.length === 0) return res.status(404).send("Project not found or no applicants.");
             let applications = result.rows;
             var dict: { [key: string]: number } = {};
             applications.forEach(
@@ -146,12 +163,26 @@ export const getApplicationsPerProf = (req: Request, res: Response) => {
 export const confirmApplication = (req: Request, res: Response) => {
     const projectId = req.params.id;
     const { id } = req.body;
+
     pool.query(
-        'UPDATE "Applications" SET status = ' + "'approved'" + ' WHERE user_id = $1 AND project_id = $2',
-        [id, projectId],
+        'SELECT creator FROM "projects", "applications" WHERE project_id = $1 AND project_id = id',
+        [projectId],
         (error: Error, result: any) => {
             if (error) return res.status(400).send(error);
-            res.status(200).send("Application confirmed.");
+            if (result.rows.length === 0) return res.status(404).send("Project not found or wrong applicant id.");
+            if (result.rows[0].creator !== req.session.userId) {
+                return res.status(403).send("Unauthorized");
+            }
+            pool.query(
+                'UPDATE "applications" SET status = ' +
+                    "'approved'" +
+                    " WHERE user_id = $1 AND project_id = $2",
+                [id, projectId],
+                (error: Error, result: any) => {
+                    if (error) return res.status(400).send(error);
+                    res.status(200).send("Application confirmed.");
+                }
+            );
         }
     );
 };
@@ -159,12 +190,26 @@ export const confirmApplication = (req: Request, res: Response) => {
 export const rejectApplication = (req: Request, res: Response) => {
     const projectId = req.params.id;
     const { id } = req.body;
+
     pool.query(
-        'UPDATE "Applications" SET status = ' + "'rejected'" + ' WHERE user_id = $1 AND project_id = $2',
-        [id, projectId],
+        'SELECT creator FROM "projects", "applications" WHERE project_id = $1 AND project_id = id',
+        [projectId],
         (error: Error, result: any) => {
             if (error) return res.status(400).send(error);
-            res.status(200).send("Application rejected.");
+            if (result.rows.length === 0) return res.status(404).send("Project not found or wrong applicant id.");
+            if (result.rows[0].creator !== req.session.userId) {
+                return res.status(403).send("Unauthorized");
+            }
+            pool.query(
+                'UPDATE "applications" SET status = ' +
+                    "'rejected'" +
+                    " WHERE user_id = $1 AND project_id = $2",
+                [id, projectId],
+                (error: Error, result: any) => {
+                    if (error) return res.status(400).send(error);
+                    res.status(200).send("Application rejected.");
+                }
+            );
         }
     );
 };
@@ -172,11 +217,34 @@ export const rejectApplication = (req: Request, res: Response) => {
 export const getApplications = (req: Request, res: Response) => {
     const id = req.params.id;
     pool.query(
-        'SELECT * FROM "Applications" WHERE project_id = $1',
+        'SELECT creator FROM "projects", "applications" WHERE project_id = $1 AND project_id = id',
         [id],
         (error: Error, result: any) => {
             if (error) return res.status(400).send(error);
-            res.status(200).send(result.rows);
+            if (result.rows.length === 0) return res.status(404).send("Project not found or no applicants.");
+            if (result.rows[0].creator !== req.session.userId) {
+                return res.status(403).send("Unauthorized");
+            }
+            pool.query(
+                'SELECT "applications".* FROM "applications", "projects" WHERE project_id = $1 AND creator = $2',
+                [id, req.session.userId],
+                (error: Error, result: any) => {
+                    if (error) return res.status(400).send(error);
+                    const apps: Application[] = result.rows;
+
+                    var dict: { [key: string]: string[] } = {};
+
+                    apps.forEach((app: Application) => {
+                        if (dict[app.profession] !== undefined) {
+                            dict[app.profession].push(app.user_id);
+                        } else {
+                            dict[app.profession] = [app.user_id];
+                        }
+                    });
+
+                    res.status(200).send(dict);
+                }
+            );
         }
     );
 };
