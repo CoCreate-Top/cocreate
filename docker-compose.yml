@@ -14,17 +14,5 @@ services:
       context: cocreate-node/.
       args:
         port: 8000
-        NODE_PORT: $NODE_PORT
-        DB_PASSWORD: $DB_PASSWORD
-        DB_HOST: $DB_HOST
-        DB_PORT: $DB_PORT
-        DB_USER: $DB_USER
-        DB_NAME: $DB_NAME
-        ACCESS_TOKEN_SECRET: $ACCESS_TOKEN_SECRET
-        SALT_ROUNDS: $SALT_ROUNDS
-        GOOGLE_CLIENT_ID: $GOOGLE_CLIENT_ID
-        GOOGLE_CLIENT_SECRET: $GOOGLE_CLIENT_SECRET
-        GOOGLE_OAUTH_REDIRECT_URL: $GOOGLE_OAUTH_REDIRECT_URL
-        ORIGIN_URL: $ORIGIN_URL
     ports:
       - 8000:8000
