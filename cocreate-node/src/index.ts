@@ -5,7 +5,7 @@ import connectPgSimple from 'connect-pg-simple';
 
 import dotenv from 'dotenv';
 import userAuthRoutes from './routes/userAuthRoutes';
-import apiRoutes from './routes/apiRoutes';
+import apiRoutes from './routes/projectRoutes';
 import { ensureAuthenticated } from './controllers/sessionsController';
 import pool from './config/database';
 import cors from 'cors';
