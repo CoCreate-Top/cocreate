@@ -21,10 +21,7 @@ app.use(session({
     store: new PgStore({
         pool: pool,
     }),
-    secret: process.env.ACCESS_TOKEN_SECRET || (() => { 
-      console.error('No secret provided');
-      return 'secret';
-  })(),
+    secret: process.env.ACCESS_TOKEN_SECRET as string,
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false, maxAge: 1000 * 60 * 30 }
@@ -65,10 +62,8 @@ app.get("/ping/secure", ensureAuthenticated, (req, res) => {
     res.status(200).json({ message: "pong" });
 });
 
-// DEBUG ROUTE, REMOVE LATER
-
 app.get("/", (req, res) => {
-    res.status(200).json({ message: process.env.SALT_ROUNDS });
+    res.status(200).json({ message: "Merry Chryzler" });
 });
 
 app.listen(port, () => {
