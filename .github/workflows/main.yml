@@ -9,9 +9,9 @@ jobs:
     steps:
       - name: Git checkout
         uses: actions/checkout@v3
-      - run: docker-compose down
+      - run: docker compose down
       - run: |
-          docker-compose up -d --build \
+          docker compose up -d --build \
             -e NODE_PORT=${{ secrets.NODE_PORT }} \
             -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
             -e DB_HOST=${{ secrets.DB_HOST }} \
