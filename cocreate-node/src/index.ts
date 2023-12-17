@@ -31,7 +31,16 @@ const swaggerDocument = require('../swagger/swagger-output.json');
 
 const port = process.env.NODE_PORT || 8000;
 
-app.use(cors());
+app.use(cors({
+    origin: function (origin, callback) {
+      const allowedOrigins = ['http://cocreate.top', 'http://localhost:4200'];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    }
+  }));
 app.use(express.json());
 app.use('/api/auth', userAuthRoutes);
 app.use('/api/db', ensureAuthenticated, projectRoutes);
