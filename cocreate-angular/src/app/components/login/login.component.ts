@@ -21,7 +21,7 @@ export class LoginComponent {
   loginGoogle() {
   }
 
-  register(firstName: string, lastName: string, email: string, password: string) {
+  register(firstName: string, lastName: string, password: string) {
   }
 
 }
