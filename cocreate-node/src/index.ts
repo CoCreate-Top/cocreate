@@ -9,6 +9,7 @@ import projectRoutes from './routes/projectRoutes';
 import { ensureAuthenticated } from './controllers/sessionsController';
 import pool from './config/database';
 import cors from 'cors';
+import userRoutes from './routes/userRoutes';
 
 dotenv.config();
 
@@ -42,8 +43,13 @@ app.use(cors({
     }
   }));
 app.use(express.json());
+
 app.use('/api/auth', userAuthRoutes);
+
 app.use('/api/db', ensureAuthenticated, projectRoutes);
+
+app.use('/api/users', ensureAuthenticated, userRoutes);
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // TEST ROUTES
