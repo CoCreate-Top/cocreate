@@ -6,7 +6,7 @@ dotenv.config();
 export const googleClientID = process.env.GOOGLE_CLIENT_ID;
 export const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
 export const googleOauthRedirectUrl = process.env.GOOGLE_OAUTH_REDIRECT_URL;
-export const origin = "http://localhost:4200"; // TODO: change this to production url
+export const origin = process.env.ORIGIN_URL;
 
 const pool = new Pool({
     user: process.env.DB_USER,
