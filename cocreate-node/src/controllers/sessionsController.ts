@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getGoogleOAuthTokens, upsertUser } from "../service/user.service";
+import { getGoogleOAuthTokens, upsertUser } from "../service/userService";
 import pool, { googleClientID, origin } from "../config/database";
 import { OAuth2Client } from "google-auth-library";
 
