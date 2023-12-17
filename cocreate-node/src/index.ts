@@ -21,7 +21,10 @@ app.use(session({
     store: new PgStore({
         pool: pool,
     }),
-    secret: process.env.ACCESS_TOKEN_SECRET as string,
+    secret: process.env.ACCESS_TOKEN_SECRET || (() => { 
+      console.error('No secret provided');
+      return 'secret';
+  })(),
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false, maxAge: 1000 * 60 * 30 }
