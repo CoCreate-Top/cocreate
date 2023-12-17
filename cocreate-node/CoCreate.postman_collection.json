@@ -1,0 +1,241 @@
+{
+	"info": {
+		"_postman_id": "c219824d-d265-4038-bf15-8a8e0dd27c64",
+		"name": "CoCreate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "25931786",
+		"_collection_link": "https://cocreate123.postman.co/workspace/My-Workspace~7fd2e47c-00a7-4fd8-8170-4c825411d8b7/collection/25931786-c219824d-d265-4038-bf15-8a8e0dd27c64?action=share&source=collection_link&creator=25931786"
+	},
+	"item": [
+		{
+			"name": "Db",
+			"item": [
+				{
+					"name": "Project",
+					"item": [
+						{
+							"name": "Get projects",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "localhost:8000/api/db/projects"
+							},
+							"response": []
+						},
+						{
+							"name": "Create project",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"test\",\n    \"creator\": \"cd11ac58-aa61-4443-8a7f-1a3a89b313e6\",\n    \"description\": \"test\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:8000/api/db/project/new"
+							},
+							"response": []
+						},
+						{
+							"name": "Update project",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"dd124894-a7a9-4b57-ad1f-168c209662c1\",\n    \"status\": \"started\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:8000/api/db/project/242e19e7-4d32-46d2-b831-c8e1af80e6fd"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete project",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"dd124894-a7a9-4b57-ad1f-168c209662c1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:8000/api/db/project/242e19e7-4d32-46d2-b831-c8e1af80e6fd"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Application",
+					"item": [
+						{
+							"name": "New application",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"3ee37c2e-6e6d-46c7-88b6-15bfffe66be7\",\n    \"profession\": \"denis\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:8000/api/db/project/e96d5fda-618a-4b7b-b458-d7b6948a5a6c/apply"
+							},
+							"response": []
+						},
+						{
+							"name": "Number of applicants",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "localhost:8000/api/db/project/e96d5fda-618a-4b7b-b458-d7b6948a5a6c/applied"
+							},
+							"response": []
+						},
+						{
+							"name": "Get applicants",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "localhost:8000/api/db/project/e96d5fda-618a-4b7b-b458-d7b6948a5a6c/applicants"
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm applicant",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"ee884dd6-a878-416d-a41a-313e761fe56c\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:8000/api/db/project/e96d5fda-618a-4b7b-b458-d7b6948a5a6c/confirm"
+							},
+							"response": []
+						},
+						{
+							"name": "Reject applicant",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"3ee37c2e-6e6d-46c7-88b6-15bfffe66be7\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "localhost:8000/api/db/project/e96d5fda-618a-4b7b-b458-d7b6948a5a6c/reject"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "SignUp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"testko.testni@gmail.com\",\n    \"password\": \"password\",\n    \"name\": \"Test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8000/api/auth/signup"
+					},
+					"response": []
+				},
+				{
+					"name": "LogIn",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"testko.testni@gmail.com\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8000/api/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "LogOut",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "localhost:8000/api/auth/logout"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Test Ping",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"bla\", \n    \"lastName\": \"Bla\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8000/ping"
+			},
+			"response": []
+		},
+		{
+			"name": "Test Ping Secure",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "localhost:8000/ping/secure"
+			},
+			"response": []
+		}
+	]
+}
