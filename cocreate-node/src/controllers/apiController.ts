@@ -1,6 +1,6 @@
-import { Request, Response, application } from "express";
+import { Request, Response } from "express";
 import pool from "../config/database";
-import { Project } from "../types/project";
+import { Project } from "../models/projectModel";
 
 /**
  * Gets all projects.
