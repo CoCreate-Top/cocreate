@@ -5,7 +5,7 @@ import connectPgSimple from 'connect-pg-simple';
 
 import dotenv from 'dotenv';
 import userAuthRoutes from './routes/userAuthRoutes';
-import apiRoutes from './routes/projectRoutes';
+import projectRoutes from './routes/projectRoutes';
 import { ensureAuthenticated } from './controllers/sessionsController';
 import pool from './config/database';
 import cors from 'cors';
@@ -34,7 +34,7 @@ const port = process.env.NODE_PORT || 8000;
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', userAuthRoutes);
-app.use('/api/db', ensureAuthenticated, apiRoutes);
+app.use('/api/db', ensureAuthenticated, projectRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // TEST ROUTES
