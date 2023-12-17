@@ -65,6 +65,12 @@ app.get("/ping/secure", ensureAuthenticated, (req, res) => {
     res.status(200).json({ message: "pong" });
 });
 
+// DEBUG ROUTE, REMOVE LATER
+
+app.get("/", (req, res) => {
+    res.status(200).json({ message: process.env.SALT_ROUNDS });
+});
+
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
