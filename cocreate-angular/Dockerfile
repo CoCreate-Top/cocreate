@@ -13,4 +13,4 @@ COPY . .
 EXPOSE ${port}
 
 # CMD npm start
-CMD ng serve --host 0.0.0.0 --port ${port}
+CMD ng serve --host 0.0.0.0 --port ${port} --public-host https://cocreate.top
