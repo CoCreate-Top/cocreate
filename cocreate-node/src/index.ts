@@ -52,7 +52,7 @@ app.use('/api/users', ensureAuthenticated, userRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// TEST ROUTES
+/* TEST ROUTES */
 
 app.get("/ping", (req, res) => {
     res.status(200).json({ message: "pong" });
@@ -65,6 +65,8 @@ app.get("/ping/secure", ensureAuthenticated, (req, res) => {
 app.get("/", (req, res) => {
     res.status(200).json({ message: "Merry Chryzler" });
 });
+
+/* END OF TEST ROUTES */
 
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

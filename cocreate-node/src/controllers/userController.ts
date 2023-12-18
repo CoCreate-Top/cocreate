@@ -24,7 +24,7 @@ export const getUser = (req: Request, res: Response) => {
 }
 
 export const changePassword = (req: Request, res: Response) => {
-    const { new_password, old_password } = req.body; // TODO: add other fields
+    const { new_password, old_password } = req.body;
     if (!req.session.userId) return res.status(401).send("No user logged in");
 
     pool.query(
@@ -33,12 +33,11 @@ export const changePassword = (req: Request, res: Response) => {
             if (error) return res.status(400).send(error);
             if (results.rows.length == 0) return res.status(401).send('User not found');
             const user: User = results.rows[0];
-            // TODO: extract password comparing to a function
-            bcrypt.compare(old_password, user.password, (err: Error | undefined, result: boolean) => { 
+
+            bcrypt.compare(old_password, user.password, (err: Error | undefined, result: boolean) => {
             if (err) return res.status(400).send(err);
             if (!result) return res.status(401).send('Invalid password');
 
-            // TODO: extract password hashing to a function
             bcrypt.genSalt(Number(process.env.SALT_ROUNDS), (err: Error | undefined, salt: string) => {
                 if (err) return res.status(400).send(err);
 
@@ -49,7 +48,7 @@ export const changePassword = (req: Request, res: Response) => {
                         [hash, req.session.userId],
                         (error: Error) => {
                             if (error) return res.status(400).send(error);
-                            res.status(200).send("User updated"); // TODO: return updated user data?
+                            res.status(200).send("Password updated");
                         }
                     );
                 });
