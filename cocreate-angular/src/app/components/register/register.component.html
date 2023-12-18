@@ -1,10 +1,15 @@
 <div class="mainContainer">
   <h1>Register</h1>
-  <form>
-    <input class="iPass" type="text" id="iUsername" name="iUsername" placeholder="Username"><br><br>
-    <input class="iPass" type="password" id="iPass" name="iPass" placeholder="Password"><br><br>
-    <input class="iPass" type="password" id="iRPass" name="iRPass" placeholder="Repeat password"><br><br>
-    <input type="submit" value="Submit">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+    <input id="user-name" type="text" formControlName="userName" placeholder="Username"><br><br>
+  
+    <input id="password" type="password" formControlName="password" placeholder="Password"><br><br>
+
+    <input id="rpassword" type="password" formControlName="rpassword" placeholder="Repeat password"><br><br>
+
+    <button type="submit">Login</button>
+  
   </form>
   </div>
 
