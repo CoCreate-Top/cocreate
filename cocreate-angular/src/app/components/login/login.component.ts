@@ -11,14 +11,14 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-  profileForm = new FormGroup({
+  loginForm = new FormGroup({
     userName: new FormControl(''),
     password: new FormControl(''),
   });
 
   onSubmit() {
     // TODO: Use EventEmitter with form value
-    console.warn(this.profileForm.value);
+    console.warn(this.loginForm.value);
   }
 
   constructor(private authenticationService: AuthenticationService) {
