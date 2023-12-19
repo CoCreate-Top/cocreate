@@ -16,11 +16,11 @@ export const userSignUp = (req: Request, res: Response) => {
 
     // generates salt with number rounds of hashing provided in .env
     bcrypt.genSalt(Number(process.env.SALT_ROUNDS), (err: Error | undefined, salt: string) => {
-        if (err) return res.status(400).send(err);
+        if (err) return res.status(500).send(err);
 
         // hashes password with salt
         bcrypt.hash(password, salt, (err: Error | undefined, hash: string) => {
-            if (err) return res.status(400).send(err);
+            if (err) return res.status(500).send(err);
 
             //? password is hashed in the following format: $2b$10$b63K/D03WFBktWy552L5XuibmiD5SxCrKg9kHCqOYaZwxRjIg14u2
             // $2b$ - hashing algorithm
@@ -31,7 +31,7 @@ export const userSignUp = (req: Request, res: Response) => {
             pool.query('INSERT INTO "users" (name, email, password) VALUES ($1, $2, $3) RETURNING id', [name, email, hash], (error: Error, result) => {
                 if (error) return res.status(400).send(error);
                 req.session.userId = result.rows[0].id;
-                res.status(201).send('User created');
+                res.status(201).redirect(`${origin}/login`); // Redirect to login page
             });
         });
     });
@@ -56,12 +56,12 @@ export const userLogin = (req: Request, res: Response) => {
         } else {
             // if user exists compare password
             bcrypt.compare(password, results.rows[0].password, (err: Error | undefined, result: boolean) => {
-                if (err) return res.status(400).send(err);
+                if (err) return res.status(500).send(err);
                 if (result) {
                     req.session.userId = results.rows[0].id;
                     res.status(200).send('Login successful')
                 } else {
-                    res.status(401).send('Invalid credentials')
+                    res.status(401).send('Invalid credentials').redirect(`${origin}/login`); // Redirect to login page
                 }
             });
         }
@@ -78,6 +78,6 @@ export const userLogout = (req: Request, res: Response) => {
             }
         });
     } else {
-        return res.status(200).send("No user logged in");
+        return res.status(204).send("No user logged in");
     }
 };
