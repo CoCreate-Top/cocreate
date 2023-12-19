@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 import userAuthRoutes from './routes/userAuthRoutes';
 import projectRoutes from './routes/projectRoutes';
 import { ensureAuthenticated } from './controllers/sessionsController';
-import pool from './config/database';
+import pool, { isProduction } from './config/database';
 import cors from 'cors';
 import userRoutes from './routes/userRoutes';
 
@@ -54,15 +54,16 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 /* TEST ROUTES */
 
-app.get("/ping", (req, res) => {
+app.get("/ping", (_req, res) => {
+    if (!isProduction()) res.status(200).json({ message: "pong (dev)" });
+    else res.status(200).json({ message: "pong" });
+});
+
+app.get("/ping/secure", ensureAuthenticated, (_req, res) => {
     res.status(200).json({ message: "pong" });
 });
 
-app.get("/ping/secure", ensureAuthenticated, (req, res) => {
-    res.status(200).json({ message: "pong" });
-});
-
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
     res.status(200).json({ message: "Merry Chryzler" });
 });
 
