@@ -90,10 +90,15 @@ export function logout(req: Request, res: Response) {
 }
 
 export function ensureAuthenticated(req: Request, res: Response, next: any) {
-    if (req.session.userId) {
-        next();
-    } else {
-        console.log("Unauthorized");
-        res.status(401).send("Unauthorized");
+    try {
+        if (req.session.userId) {
+            next();
+        } else {
+            console.log("Unauthorized");
+            res.status(401).send("Unauthorized");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(401).send("Invalid session");
     }
   }
