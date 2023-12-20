@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getGithubAccessToken, getGoogleOAuthTokens, upsertUser } from "../service/userService";
-import pool, { googleClientID, origin } from "../config/database";
+import { googleClientID, origin } from "../config/database";
 import { OAuth2Client } from "google-auth-library";
 import axios from "axios";
 

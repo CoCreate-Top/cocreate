@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt'
 import pool from '../config/database';
-
+import { origin } from '../config/database';
 
 /**
  * Handles user signup. 
@@ -61,7 +61,7 @@ export const userLogin = (req: Request, res: Response) => {
                     req.session.userId = results.rows[0].id;
                     res.status(200).send('Login successful')
                 } else {
-                    res.status(401).send('Invalid credentials').redirect(`${origin}/login`); // Redirect to login page
+                    res.status(401).send('Invalid credentials');
                 }
             });
         }
