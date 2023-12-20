@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getGithubAccessToken, getGoogleOAuthTokens, upsertUser } from "../service/userService";
-import pool, { googleClientID, origin } from "../config/database";
+import { googleClientID, origin } from "../config/database";
 import { OAuth2Client } from "google-auth-library";
 import axios from "axios";
 
@@ -90,10 +90,15 @@ export function logout(req: Request, res: Response) {
 }
 
 export function ensureAuthenticated(req: Request, res: Response, next: any) {
-    if (req.session.userId) {
-        next();
-    } else {
-        console.log("Unauthorized");
-        res.status(401).send("Unauthorized");
+    try {
+        if (req.session.userId) {
+            next();
+        } else {
+            console.log("Unauthorized");
+            res.status(401).send("Unauthorized");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(401).send("Invalid session");
     }
   }
