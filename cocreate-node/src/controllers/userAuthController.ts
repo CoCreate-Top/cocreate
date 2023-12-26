@@ -31,7 +31,7 @@ export const userSignUp = (req: Request, res: Response) => {
             pool.query('INSERT INTO "users" (name, email, password) VALUES ($1, $2, $3) RETURNING id', [name, email, hash], (error: Error, result) => {
                 if (error) return res.status(400).send(error);
                 req.session.userId = result.rows[0].id;
-                res.status(201).redirect(`${origin}/login`); // Redirect to login page
+                res.status(201).send('Sign up successful'); // Redirect to login page
             });
         });
     });
