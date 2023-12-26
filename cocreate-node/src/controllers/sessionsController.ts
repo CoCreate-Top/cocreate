@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { getGoogleOAuthTokens, upsertUser } from "../service/user.service";
-import pool, { googleClientID, origin } from "../config/database";
+import { getGithubAccessToken, getGoogleOAuthTokens, upsertUser } from "../service/userService";
+import { googleClientID, origin } from "../config/database";
 import { OAuth2Client } from "google-auth-library";
+import axios from "axios";
 
 const client = new OAuth2Client(googleClientID);
 
@@ -26,15 +27,49 @@ export async function googleOAuthHandler(req: Request, res: Response) {
         }
 
         if (googleUser && googleUser.email) {
-            await upsertUser(googleUser.name || "User", googleUser.email);
+            const user = await upsertUser(googleUser.name || "User", googleUser.email);
+            if (!user) throw new Error("User not found");
+            req.session.userId = user.id;
         } else throw new Error("Google user not found");
 
-        const { rows } = await pool.query('SELECT * FROM users WHERE email = $1', [googleUser.email]);
-        const user = rows[0];
+        res.redirect(`${origin}`); // TODO: redirect to whatever home page will be
 
-        if (!user) throw new Error("User not found");
+    } catch (error) {
+        console.error(error);
+        return res.redirect(`${origin}`); // TODO: redirect to login page with error message
+    }
+}
 
-        req.session.userId = user.id;
+export async function githubOAuthHandler(req: Request, res: Response) {
+    const { code } = req.query;
+    if (!code) {
+        return res.status(400).send({ error: "Missing code" });
+    }
+
+    try {
+        const access_token = await getGithubAccessToken(code as string);
+
+        const { data: emails } = await axios.get("https://api.github.com/user/emails", {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        });
+
+        const primaryEmail = emails.find((email: any) => email.primary).email;
+
+        const { data } = await axios.get("https://api.github.com/user", {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        });
+
+        // data contains url for user github
+        if (data && primaryEmail) {
+            const user = await upsertUser(data.name || "User", primaryEmail);
+            if (!user) throw new Error("User not found");
+            req.session.userId = user.id;
+        } else throw new Error("Github user not found");
+
 
         res.redirect(`${origin}`); // TODO: redirect to whatever home page will be
 
@@ -55,10 +90,15 @@ export function logout(req: Request, res: Response) {
 }
 
 export function ensureAuthenticated(req: Request, res: Response, next: any) {
-    if (req.session.userId) {
-        next();
-    } else {
-        console.log("Unauthorized");
-        res.status(401).send("Unauthorized");
+    try {
+        if (req.session.userId) {
+            next();
+        } else {
+            console.log("Unauthorized");
+            res.status(401).send("Unauthorized");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(401).send("Invalid session");
     }
   }
