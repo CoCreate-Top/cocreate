@@ -34,7 +34,7 @@ const port = process.env.NODE_PORT || 8000;
 
 app.use(cors({
     origin: function (origin, callback) {
-      const allowedOrigins = ['http://cocreate.top', 'http://localhost:4200'];
+      const allowedOrigins = ['https://cocreate.top', 'http://localhost:4200'];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -42,6 +42,7 @@ app.use(cors({
       }
     }
   }));
+
 app.use(express.json());
 
 app.use('/api/auth', userAuthRoutes);
