@@ -1,11 +1,17 @@
 import { Router } from "express";
-import { getUser, changePassword } from "../controllers/userController";
+import { getUser, changePassword, getUserProfile, getMyProfile, changeUserProfile } from "../controllers/userController";
 
 const router = Router();
 
-router.get("/profile", getUser);
+router.get("/user", getUser);
 
-router.patch("/profile", changePassword);
+router.patch("/user", changePassword);
+
+router.get("/profile", getMyProfile);
+
+router.get("/profile/:id", getUserProfile);
+
+router.put("/profile/:id", changeUserProfile);
 
 // TODO: Add routes for deleting user?
 
