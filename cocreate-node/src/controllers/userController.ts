@@ -111,26 +111,24 @@ export const getUserProfile = (req: Request, res: Response) => {
 
 export const changeUserProfile = (req: Request, res: Response) => {
     const { id } = req.params;
-    const { first_name, last_name, about_me, skills, job_title, experience, education, location, languages, linkedin, github } = req.body;
-    pool.query(
-        'UPDATE "user_profile" SET first_name = $1, last_name = $2, about_me = $3, skills = $4, job_title = $5, experience = $6, education = $7, location = $8, languages = $9, linkedin = $10, github = $11 WHERE id = $12 RETURNING *',
-        [first_name, last_name, about_me, skills, job_title, experience, education, location, languages, linkedin, github, id],
-        (error: Error) => {
-            if (error) return res.status(400).send(error);
-            res.status(200).json({
-                id: id,
-                first_name: first_name,
-                last_name: last_name,
-                about_me: about_me,
-                skills: skills,
-                job_title: job_title,
-                experience: experience,
-                education: education,
-                location: location,
-                languages: languages,
-                linkedin: linkedin,
-                github: github
-            });
+
+    let query = 'UPDATE "user_profile" SET';
+    let params = [];
+    let index = 1;
+
+    for (let field of ['first_name', 'last_name', 'about_me', 'skills', 'job_title', 'experience', 'education', 'location', 'languages', 'linkedin', 'github']) {
+        if (req.body[field]) {
+            query += ` ${field} = $${index},`;
+            params.push(req.body[field]);
+            index++;
         }
-    );
+    }
+
+    query = query.slice(0, -1) + ` WHERE id = $${index} RETURNING *`;
+    params.push(id);
+
+    pool.query(query, params, (error: Error, results) => {
+        if (error) return res.status(400).send(error);
+        res.status(200).json(results.rows[0]);
+    });
 }
