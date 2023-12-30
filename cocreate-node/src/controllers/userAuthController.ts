@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt'
 import pool from '../config/database';
-import { origin } from '../config/database';
 
 /**
  * Handles user signup. 
@@ -31,7 +30,7 @@ export const userSignUp = (req: Request, res: Response) => {
             pool.query('INSERT INTO "users" (name, email, password) VALUES ($1, $2, $3) RETURNING id', [name, email, hash], (error: Error, result) => {
                 if (error) return res.status(400).send(error);
                 req.session.userId = result.rows[0].id;
-                res.status(201).send('Sign up successful'); // Redirect to login page
+                res.status(201).json({message: 'Sign up successful'}); // Redirect to login page
             });
         });
     });
@@ -59,7 +58,7 @@ export const userLogin = (req: Request, res: Response) => {
                 if (err) return res.status(500).send(err);
                 if (result) {
                     req.session.userId = results.rows[0].id;
-                    res.status(200).send('Login successful')
+                    res.status(200).json({message: 'Login successful'})
                 } else {
                     res.status(401).send('Invalid credentials');
                 }
@@ -74,10 +73,10 @@ export const userLogout = (req: Request, res: Response) => {
             if (err) {
                 return res.status(500).send("Could not log out");
             } else {
-                return res.status(200).send("Logged out successfully");
+                return res.status(200).json({message: "Logged out successfully"});
             }
         });
     } else {
-        return res.status(204).send("No user logged in");
+        return res.status(204).json({message: "No user logged in"});
     }
 };
