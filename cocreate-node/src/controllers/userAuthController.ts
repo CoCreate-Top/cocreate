@@ -15,11 +15,11 @@ export const userSignUp = (req: Request, res: Response) => {
 
     // generates salt with number rounds of hashing provided in .env
     bcrypt.genSalt(Number(process.env.SALT_ROUNDS), (err: Error | undefined, salt: string) => {
-        if (err) return res.status(500).send(err);
+        if (err) return res.status(500).json({ err });
 
         // hashes password with salt
         bcrypt.hash(password, salt, (err: Error | undefined, hash: string) => {
-            if (err) return res.status(500).send(err);
+            if (err) return res.status(500).json({ err });
 
             //? password is hashed in the following format: $2b$10$b63K/D03WFBktWy552L5XuibmiD5SxCrKg9kHCqOYaZwxRjIg14u2
             // $2b$ - hashing algorithm
@@ -28,7 +28,7 @@ export const userSignUp = (req: Request, res: Response) => {
             // ibmiD5SxCrKg9kHCqOYaZwxRjIg14u2 - hashed password
 
             pool.query('INSERT INTO "users" (name, email, password) VALUES ($1, $2, $3) RETURNING id', [name, email, hash], (error: Error, result) => {
-                if (error) return res.status(400).send(error);
+                if (error) return res.status(400).json({ error });
                 req.session.userId = result.rows[0].id;
                 res.status(201).json({message: 'Sign up successful'}); // Redirect to login page
             });
@@ -49,18 +49,18 @@ export const userLogin = (req: Request, res: Response) => {
         'SELECT * FROM "users" WHERE email = $1',
         [email],
         (error: Error, results: any) => {
-            if (error) return res.status(400).send(error);
+            if (error) return res.status(400).json({ error });
         if (results.rows.length == 0) {
-            return res.status(401).send('Invalid credentials')
+            return res.status(401).json({error: 'Invalid credentials'});
         } else {
             // if user exists compare password
             bcrypt.compare(password, results.rows[0].password, (err: Error | undefined, result: boolean) => {
-                if (err) return res.status(500).send(err);
+                if (err) return res.status(500).json({ err });
                 if (result) {
                     req.session.userId = results.rows[0].id;
-                    res.status(200).json({message: 'Login successful'})
+                    res.status(200).json({message: 'Login successful'});
                 } else {
-                    res.status(401).send('Invalid credentials');
+                    res.status(401).json({error: 'Invalid credentials'});
                 }
             });
         }
@@ -71,12 +71,12 @@ export const userLogout = (req: Request, res: Response) => {
     if (req.session.userId) {
         req.session.destroy((err) => {
             if (err) {
-                return res.status(500).send("Could not log out");
+                return res.status(500).json({ error: "Could not log out" });
             } else {
-                return res.status(200).json({message: "Logged out successfully"});
+                return res.status(200).json({ message: "Logged out successfully" });
             }
         });
     } else {
-        return res.status(204).json({message: "No user logged in"});
+        return res.status(204).json({ message: "No user logged in" });
     }
 };
