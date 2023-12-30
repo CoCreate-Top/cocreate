@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { HttpResponse, HttpStatusCode } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -54,7 +53,7 @@ export class LoginComponent {
   }
 
   register(firstName: string, lastName: string, email: string, username: string, password: string) {
-    this.authenticationService.register(firstName, lastName, email, username, password).subscribe(res => {
+    this.authenticationService.register(username, email, password).subscribe(res => {
       switch (res.status) {
         case HttpStatusCode.Created:
           // this.toastrService.success();

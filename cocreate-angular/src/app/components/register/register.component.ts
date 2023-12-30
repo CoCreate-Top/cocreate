@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-register',
@@ -16,9 +17,16 @@ export class RegisterComponent {
     rpassword: new FormControl(''),
   });
 
-  onSubmit() {
-    // TODO: Use EventEmitter with form value
-    console.warn(this.registerForm.value);
+  constructor(private authenticationService: AuthenticationService) {
+
   }
 
+  register(username: string, email: string, password: string) {
+    this.authenticationService.register(username, email, password).subscribe({
+      next: (res) => {
+
+      },
+      error: (err) => console.log(err)
+    });
+  }
 }

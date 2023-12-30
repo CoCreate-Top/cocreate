@@ -9,23 +9,19 @@ export class AuthenticationService {
   apiURL = ""
 
   constructor(private httpClient: HttpClient) {
-    this.apiURL = "http://localhost:8000";
+    // TODO: zrihtaj api url iz environment spremenljivke
+    this.apiURL = "http://localhost:8000/api";
   }
 
-  ping() {
-    this.httpClient.get(`${this.apiURL}/ping`).subscribe(res => console.log("API is accessible :)"))
+  register(username: string, email: string, password: string) {
+    return this.httpClient.post<HttpResponse<any>>(`${this.apiURL}/auth/signup`, { name: username, email: email, password: password });
   }
 
   loginUsername(username: string, password: string): Observable<HttpResponse<any>> {
-    return this.httpClient.post<HttpResponse<any>>(this.apiURL, { username: username, pasword: password });
+    return this.httpClient.post<HttpResponse<any>>(this.apiURL, { name: username, username, password });
   }
 
   loginGoogle() {
 
   }
-
-  register(firstName: string, lastName: string, email: string, username: string, password: string) {
-    return this.httpClient.post<HttpResponse<any>>(this.apiURL, { firstName: firstName, lastName: lastName, username: username, pasword: password });
-  }
-
 }
