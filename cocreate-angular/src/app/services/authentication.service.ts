@@ -13,15 +13,21 @@ export class AuthenticationService {
     this.apiURL = "http://localhost:8000/api";
   }
 
-  register(username: string, email: string, password: string) {
+  register(username: string, email: string, password: string): Observable<HttpResponse<any>> {
+    // TODO: polepšaj poslani object
     return this.httpClient.post<HttpResponse<any>>(`${this.apiURL}/auth/signup`, { name: username, email: email, password: password });
   }
 
-  loginUsername(username: string, password: string): Observable<HttpResponse<any>> {
-    return this.httpClient.post<HttpResponse<any>>(this.apiURL, { name: username, username, password });
+  loginUsername(email: string, password: string): Observable<HttpResponse<any>> {
+    return this.httpClient.post<HttpResponse<any>>(`${this.apiURL}/auth/login`, { email, password });
   }
 
   loginGoogle() {
+
+  }
+
+  // TODO: implement logout
+  logout() {
 
   }
 }
