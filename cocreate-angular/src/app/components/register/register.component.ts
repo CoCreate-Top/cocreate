@@ -13,17 +13,18 @@ import { Router } from '@angular/router';
 })
 export class RegisterComponent {
   registerForm = new FormGroup({
-    userName: new FormControl(''),
-    password: new FormControl(''),
-    rpassword: new FormControl(''),
+    userName: new FormControl(),
+    email: new FormControl(),
+    password: new FormControl(),
+    rpassword: new FormControl(),
   });
 
   constructor(private authenticationService: AuthenticationService, private router: Router) {
 
   }
 
-  register(username: string, email: string, password: string) {
-    this.authenticationService.register(username, email, password).subscribe({
+  register() {
+    this.authenticationService.register(this.registerForm.getRawValue().userName, this.registerForm.getRawValue().email, this.registerForm.getRawValue().password).subscribe({
       next: (res) => {
         // TODO: toastr uspešne registracije
         this.router.navigateByUrl("/login");

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { HttpResponse, HttpStatusCode } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
@@ -14,8 +13,8 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 })
 export class LoginComponent {
   loginForm = new FormGroup({
-    userName: new FormControl(''),
-    password: new FormControl(''),
+    email: new FormControl(),
+    password: new FormControl(),
   });
 
   onSubmit() {
@@ -27,8 +26,8 @@ export class LoginComponent {
 
   }
 
-  login(email: string, password: string) {
-    this.authenticationService.loginUsername(email, password).subscribe({
+  login() {
+    this.authenticationService.loginUsername(this.loginForm.getRawValue().email, this.loginForm.getRawValue().password).subscribe({
       next: (res) => {
         console.log(res);
         // TODO: toastr za success
