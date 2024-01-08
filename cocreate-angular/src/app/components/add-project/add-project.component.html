@@ -4,13 +4,16 @@
     <div class="w-full md:block md:w-auto" id="navbar-solid-bg">
       <ul class="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent dark:border-gray-700">
         <li>
-          <a href="#" class="block py-2 px-3 md:p-0 text-2xl text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:dark:text-secondary dark:bg-secondary md:dark:bg-transparent" aria-current="page">ALL ADS</a>
+          <a href="/projects" class="block py-2 px-3 md:p-0 text-2xl text-white dark:bg-secondary md:dark:bg-transparent md:hover:text-secondary" aria-current="page">ALL ADS</a>
         </li>
         <li>
           <a href="#" class="block py-2 px-3 md:p-0 text-2xl text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-secondary dark:text-white md:dark:hover:text-secondary dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">MY ADS</a>
         </li>
         <li>
-          <a href="#" class="block py-2 px-3 md:p-0 text-2xl text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-secondary dark:text-white md:dark:hover:text-secondary dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">SETTINGS</a>
+          <a href="/add-project" routerLinkActive="active" class="block py-2 px-3 md:p-0 text-2xl text-white md:hover:text-secondary bg-blue-700 rounded md:bg-transparent dark:bg-secondary md:dark:bg-transparent" aria-current="page">ADD AD</a>
+        </li>
+        <li>
+          <a href="/profile" class="block py-2 px-3 md:p-0 text-2xl text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-secondary dark:text-white md:dark:hover:text-secondary dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">PROFILE</a>
         </li>
       </ul>
     </div>
@@ -19,7 +22,7 @@
 <section class="bg-white dark:bg-gray-900">
   <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
       <h2 class="mb-4 text-4xl font-bold text-gray-900 dark:text-white">Add a new project</h2>
-      <form  [formGroup]="addProjectForum" (ngSubmit)="submit()" action="#">
+      <form [formGroup]="addProjectForum" (ngSubmit)="submit()" action="#">
           <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
               <div class="sm:col-span-2">
                   <label for="projectName" class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Project name</label>
@@ -52,13 +55,16 @@
                   <textarea formControlName="description" id="description" rows="8" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Your description here"></textarea>
               </div>
               <div class="sm:col-span-2">
-                <label for="addPicture" class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Add picture</label>
-                <input formControlName="profilePicture" type="file" id="profilePicture" accept="image/png, image/jpeg" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-            </div>
+                <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="default_size">Add Picture</label>
+                <input formControlName="profilePicture" class="block w-full mb-5 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="default_size" type="file">
+            </div> 
           </div>
-          <button type="submit" class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:ring-primary dark:focus:ring-primary hover:bg-success">
-              Add product
+          <button type="submit" class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:ring-primary dark:focus:ring-primary hover:bg-green-500">
+              Add project
           </button>
+          <button type="submit" class="inline-flex items-center m-5 px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:ring-primary dark:focus:ring-primary hover:bg-red-500">
+            Discard project
+        </button>
       </form>
   </div>
 </section>
