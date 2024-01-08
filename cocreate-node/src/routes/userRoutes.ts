@@ -11,7 +11,7 @@ router.get("/profile", getMyProfile);
 
 router.get("/profile/:id", getUserProfile);
 
-router.put("/profile/:id", changeUserProfile);
+router.patch("/profile/:id", changeUserProfile);
 
 // TODO: Add routes for deleting user?
 
