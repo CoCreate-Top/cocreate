@@ -9,7 +9,7 @@ export const getUser = (req: Request, res: Response) => {
             'SELECT * FROM "users" WHERE id = $1',
             [req.session.userId],
             (error: Error, results: any) => {
-                if (error) return res.status(400).send(error);
+                if (error) return res.status(400).json({ error });
                 const user: User = results.rows[0];
                 res.status(200).json({
                     id: user.id,
@@ -19,36 +19,36 @@ export const getUser = (req: Request, res: Response) => {
             }
         );
     } else {
-        return res.status(401).send("No user logged in");
+        return res.status(401).json({ error: "No user logged in" });
     }
 }
 
 export const changePassword = (req: Request, res: Response) => {
     const { new_password, old_password } = req.body;
-    if (!req.session.userId) return res.status(401).send("No user logged in");
+    if (!req.session.userId) return res.status(401).json({ error: "No user logged in" });
 
     pool.query(
         'SELECT * FROM "users" WHERE id = $1', 
         [req.session.userId], (error: Error, results: any) => {
-            if (error) return res.status(400).send(error);
-            if (results.rows.length == 0) return res.status(401).send('User not found');
+            if (error) return res.status(400).json({ error });
+            if (results.rows.length == 0) return res.status(401).json({error: 'User not found'});
             const user: User = results.rows[0];
 
             bcrypt.compare(old_password, user.password, (err: Error | undefined, result: boolean) => {
-            if (err) return res.status(400).send(err);
-            if (!result) return res.status(401).send('Invalid password');
+            if (err) return res.status(400).json({ err });
+            if (!result) return res.status(401).json({error: 'Invalid password'});
 
             bcrypt.genSalt(Number(process.env.SALT_ROUNDS), (err: Error | undefined, salt: string) => {
-                if (err) return res.status(400).send(err);
+                if (err) return res.status(400).json({ err });
 
                 bcrypt.hash(new_password, salt, (err: Error | undefined, hash: string) => {
-                    if (err) return res.status(400).send(err);
+                    if (err) return res.status(400).json({ err });
                     pool.query(
                         'UPDATE "users" SET password = $1 WHERE id = $2',
                         [hash, req.session.userId],
                         (error: Error) => {
-                            if (error) return res.status(400).send(error);
-                            res.status(200).send("Password updated");
+                            if (error) return res.status(400).json({ error });
+                            res.status(200).json({ message: "Password updated" });
                         }
                     );
                 });
@@ -58,12 +58,12 @@ export const changePassword = (req: Request, res: Response) => {
 }
 
 export const getMyProfile = (req: Request, res: Response) => {
-    if (!req.session.userId) return res.status(401).send("No user logged in");
+    if (!req.session.userId) return res.status(401).json({ error: "No user logged in" });
     pool.query(
         'SELECT * FROM "user_profile" WHERE id = $1',
         [req.session.userId],
         (error: Error, results: any) => {
-            if (error) return res.status(400).send(error);
+            if (error) return res.status(400).json({ error });
             const user: UserProfile = results.rows[0];
             res.status(200).json({
                 id: user.id,
@@ -89,7 +89,7 @@ export const getUserProfile = (req: Request, res: Response) => {
         'SELECT * FROM "user_profile" WHERE id = $1',
         [id],
         (error: Error, results: any) => {
-            if (error) return res.status(400).send(error);
+            if (error) return res.status(400).json({ error });
             const user: UserProfile = results.rows[0];
             res.status(200).json({
                 id: user.id,
@@ -111,26 +111,24 @@ export const getUserProfile = (req: Request, res: Response) => {
 
 export const changeUserProfile = (req: Request, res: Response) => {
     const { id } = req.params;
-    const { first_name, last_name, about_me, skills, job_title, experience, education, location, languages, linkedin, github } = req.body;
-    pool.query(
-        'UPDATE "user_profile" SET first_name = $1, last_name = $2, about_me = $3, skills = $4, job_title = $5, experience = $6, education = $7, location = $8, languages = $9, linkedin = $10, github = $11 WHERE id = $12 RETURNING *',
-        [first_name, last_name, about_me, skills, job_title, experience, education, location, languages, linkedin, github, id],
-        (error: Error) => {
-            if (error) return res.status(400).send(error);
-            res.status(200).json({
-                id: id,
-                first_name: first_name,
-                last_name: last_name,
-                about_me: about_me,
-                skills: skills,
-                job_title: job_title,
-                experience: experience,
-                education: education,
-                location: location,
-                languages: languages,
-                linkedin: linkedin,
-                github: github
-            });
+
+    let query = 'UPDATE "user_profile" SET';
+    let params = [];
+    let index = 1;
+
+    for (let field of ['first_name', 'last_name', 'about_me', 'skills', 'job_title', 'experience', 'education', 'location', 'languages', 'linkedin', 'github']) {
+        if (req.body[field]) {
+            query += ` ${field} = $${index},`;
+            params.push(req.body[field]);
+            index++;
         }
-    );
+    }
+
+    query = query.slice(0, -1) + ` WHERE id = $${index} RETURNING *`;
+    params.push(id);
+
+    pool.query(query, params, (error: Error, results) => {
+        if (error) return res.status(400).json({ error });
+        res.status(200).json(results.rows[0]);
+    });
 }

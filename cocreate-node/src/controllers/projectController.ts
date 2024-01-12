@@ -10,8 +10,8 @@ import { Application } from "../models/applicationModel";
  */
 export const getProjects = (req: Request, res: Response) => {
     pool.query('SELECT * FROM "projects"', (error: Error, result: any) => {
-        if (error) return res.status(400).send(error);
-        res.status(200).send(result.rows);
+        if (error) return res.status(400).json(error);
+        res.status(200).json({ projects: result.rows });
     });
 };
 
@@ -28,9 +28,10 @@ export const getProject = (req: Request, res: Response) => {
         'SELECT * FROM "projects" WHERE id = $1',
         [id],
         (error: Error, result: any) => {
-            if (error) return res.status(400).send(error);
-            if (result.rowCount === 0) return res.status(404).send("Project not found");
-            res.status(200).send(result.rows);
+            if (error) return res.status(400).json(error);
+            if (result.rowCount === 0)
+                return res.status(404).json({ message: "Project not found" });
+            res.status(200).json({ project: result.rows });
         }
     );
 };
@@ -48,8 +49,8 @@ export const createProject = (req: Request, res: Response) => {
         'INSERT INTO "projects" (title, creator, description) VALUES ($1, $2, $3) RETURNING *',
         [title, req.session.userId, description],
         (error: Error, result: any) => {
-            if (error) return res.status(400).send(error);
-            res.status(201).send(result.rows);
+            if (error) return res.status(400).json(error);
+            res.status(201).json({ project: result.rows });
         }
     );
 };
@@ -71,13 +72,13 @@ export const updateProject = (req: Request, res: Response) => {
         'SELECT * FROM "projects" WHERE id = $1',
         [id],
         (error: Error, result: any) => {
-            if (error) return res.status(400).send(error);
+            if (error) return res.status(400).json(error);
             if (result.rows.length === 0) {
-                return res.status(404).send("Project not found.");
+                return res.status(404).json({ message: "Project not found." });
             }
             const project: Project = result.rows[0];
             if (project.creator !== req.session.userId) {
-                return res.status(403).send("Unauthorized");
+                return res.status(403).json({ message: "Unauthorized" });
             }
             pool.query(
                 'UPDATE "projects" SET title = $1, creator = $2, description = $3, status = $4 WHERE id = $5 RETURNING *',
@@ -89,8 +90,8 @@ export const updateProject = (req: Request, res: Response) => {
                     id,
                 ],
                 (error: Error, result: any) => {
-                    if (error) return res.status(400).send(error);
-                    res.status(200).send(result.rows);
+                    if (error) return res.status(400).json(error);
+                    res.status(200).json({ project: result.rows });
                 }
             );
         }
@@ -110,17 +111,18 @@ export const deleteProject = (req: Request, res: Response) => {
         'SELECT creator FROM "projects" WHERE id = $1',
         [id],
         (error: Error, result: any) => {
-            if (error) return res.status(400).send(error);
-            if (result.rows.length === 0) return res.status(404).send("Project not found.");
+            if (error) return res.status(400).json(error);
+            if (result.rows.length === 0)
+                return res.status(404).json({ message: "Project not found." });
             if (result.rows[0].creator !== req.session.userId) {
-                return res.status(403).send("Unauthorized");
+                return res.status(403).json({ message: "Unauthorized" });
             }
             pool.query(
                 'DELETE FROM "projects" WHERE id = $1',
                 [id],
                 (error: Error, result: any) => {
-                    if (error) return res.status(400).send(error);
-                    res.status(200).send("Project deleted.");
+                    if (error) return res.status(400).json(error);
+                    res.status(200).json({ message: "Project deleted." });
                 }
             );
         }
@@ -135,8 +137,8 @@ export const newApplication = (req: Request, res: Response) => {
         'INSERT INTO "applications" (project_id, user_id, profession) VALUES ($1, $2, $3)',
         [projectId, req.session.userId, profession],
         (error: Error, result: any) => {
-            if (error) return res.status(400).send(error);
-            res.status(200).send("Application created.");
+            if (error) return res.status(400).json(error);
+            res.status(200).json({ message: "Application created." });
         }
     );
 };
@@ -148,14 +150,17 @@ export const getApplicationsPerProf = (req: Request, res: Response) => {
         'SELECT profession, COUNT(*) FROM "applications" WHERE project_id = $1 GROUP BY profession',
         [id],
         (error: Error, result: any) => {
-            if (error) return res.status(400).send(error);
-            if (result.rows.length === 0) return res.status(404).send("Project not found or no applicants.");
+            if (error) return res.status(400).json(error);
+            if (result.rows.length === 0)
+                return res
+                    .status(404)
+                    .json({ message: "Project not found or no applicants." });
             let applications = result.rows;
             var dict: { [key: string]: number } = {};
             applications.forEach(
                 (app: any) => (dict[app.profession] = app.count)
             );
-            res.status(200).send(dict);
+            res.status(200).json(dict);
         }
     );
 };
@@ -168,19 +173,22 @@ export const confirmApplication = (req: Request, res: Response) => {
         'SELECT creator FROM "projects", "applications" WHERE project_id = $1 AND project_id = id',
         [projectId],
         (error: Error, result: any) => {
-            if (error) return res.status(400).send(error);
-            if (result.rows.length === 0) return res.status(404).send("Project not found or wrong applicant id.");
+            if (error) return res.status(400).json(error);
+            if (result.rows.length === 0)
+                return res.status(404).json({
+                    message: "Project not found or wrong applicant id.",
+                });
             if (result.rows[0].creator !== req.session.userId) {
-                return res.status(403).send("Unauthorized");
+                return res.status(403).json({ message: "Unauthorized" });
             }
             pool.query(
                 'UPDATE "applications" SET status = ' +
                     "'approved'" +
                     " WHERE user_id = $1 AND project_id = $2",
                 [id, projectId],
-                (error: Error, result: any) => {
-                    if (error) return res.status(400).send(error);
-                    res.status(200).send("Application confirmed.");
+                (error: Error, res: any) => {
+                    if (error) return res.status(400).json(error);
+                    res.status(200).json(result.rows);
                 }
             );
         }
@@ -195,19 +203,22 @@ export const rejectApplication = (req: Request, res: Response) => {
         'SELECT creator FROM "projects", "applications" WHERE project_id = $1 AND project_id = id',
         [projectId],
         (error: Error, result: any) => {
-            if (error) return res.status(400).send(error);
-            if (result.rows.length === 0) return res.status(404).send("Project not found or wrong applicant id.");
+            if (error) return res.status(400).json(error);
+            if (result.rows.length === 0)
+                return res.status(404).json({
+                    message: "Project not found or wrong applicant id.",
+                });
             if (result.rows[0].creator !== req.session.userId) {
-                return res.status(403).send("Unauthorized");
+                return res.status(403).json({ message: "Unauthorized" });
             }
             pool.query(
                 'UPDATE "applications" SET status = ' +
                     "'rejected'" +
                     " WHERE user_id = $1 AND project_id = $2",
                 [id, projectId],
-                (error: Error, result: any) => {
-                    if (error) return res.status(400).send(error);
-                    res.status(200).send("Application rejected.");
+                (error: Error, res: any) => {
+                    if (error) return res.status(400).json(error);
+                    res.status(200).json(result.rows);
                 }
             );
         }
@@ -220,16 +231,19 @@ export const getApplications = (req: Request, res: Response) => {
         'SELECT creator FROM "projects", "applications" WHERE project_id = $1 AND project_id = id',
         [id],
         (error: Error, result: any) => {
-            if (error) return res.status(400).send(error);
-            if (result.rows.length === 0) return res.status(404).send("Project not found or no applicants.");
+            if (error) return res.status(400).json(error);
+            if (result.rows.length === 0)
+                return res
+                    .status(404)
+                    .json({ message: "Project not found or no applicants." });
             if (result.rows[0].creator !== req.session.userId) {
-                return res.status(403).send("Unauthorized");
+                return res.status(403).json({ message: "Unauthorized" });
             }
             pool.query(
                 'SELECT "applications".* FROM "applications", "projects" WHERE project_id = $1 AND creator = $2',
                 [id, req.session.userId],
                 (error: Error, result: any) => {
-                    if (error) return res.status(400).send(error);
+                    if (error) return res.status(400).json(error);
                     const apps: Application[] = result.rows;
 
                     var dict: { [key: string]: string[] } = {};
@@ -242,7 +256,7 @@ export const getApplications = (req: Request, res: Response) => {
                         }
                     });
 
-                    res.status(200).send(dict);
+                    res.status(200).json(dict);
                 }
             );
         }

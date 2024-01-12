@@ -82,9 +82,9 @@ export async function githubOAuthHandler(req: Request, res: Response) {
 export function logout(req: Request, res: Response) {
     req.session.destroy((err) => {
         if (err) {
-            return res.status(500).send(err.message);
+            return res.status(500).json({ err });
         } else {
-            return res.status(200).send("Logged out successfully");
+            return res.status(200).json({ message: "Logged out successfully" });
         }
     });
 }
@@ -94,11 +94,9 @@ export function ensureAuthenticated(req: Request, res: Response, next: any) {
         if (req.session.userId) {
             next();
         } else {
-            console.log("Unauthorized");
-            res.status(401).send("Unauthorized");
+            res.status(401).json({error: "Unauthorized"});
         }
     } catch (error) {
-        console.error(error);
-        res.status(401).send("Invalid session");
+        res.status(401).json({ error: "Invalid session" });
     }
   }
