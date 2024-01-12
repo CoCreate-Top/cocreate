@@ -1,33 +1,31 @@
-<div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
-  <form [formGroup]="loginForm" (ngSubmit)="login()" class="space-y-6">
-      <h5 class="text-xl font-medium text-gray-900 dark:text-white">Sign in to Cocreate</h5>
+<div class="bg-white dark:bg-gray-800 h-screen flex items-center justify-center">
+  <form [formGroup]="loginForm" (ngSubmit)="login()" class="space-y-6 grow max-w-xl">
+      <h5 class="text-3xl font-medium text-gray-900 dark:text-white">Log in to Cocreate</h5>
       <div>
-          <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+          <label for="email" class="block mb-2 text-m font-medium text-gray-900 dark:text-white">Your email</label>
           <input formControlName="email" type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="username" required>
       </div>
       <div>
-          <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
+          <label for="password" class="block mb-2 text-m font-medium text-gray-900 dark:text-white">Your password</label>
           <input formControlName="password" type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
       </div>
       <div class="flex items-start">
           <div class="flex items-start">
               <div class="flex items-center h-5">
-                <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
+                <div class="text-m font-medium text-gray-500 dark:text-gray-300">
                   <a href="#" class="text-blue-700 hover:underline dark:text-blue-500">Create account</a>
               </div>
               </div>
           </div>
-          <a href="#" class="ms-auto text-sm text-blue-700 hover:underline dark:text-blue-500">Lost Password?</a>
+          <a href="#" class="ms-auto text-m text-blue-700 hover:underline dark:text-blue-500">Lost Password?</a>
       </div>
-      <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login to your account</button>
+      <button type="submit" class="w-full text-white bg-primary hover:bg-secondary focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-m px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-secondary">Login to your account</button>
+      <div class="text-center text-m mt-5 text-white">Or login with:</div>
+      <div class="flex flex-row space-x-16 justify-center">
+          <img src="assets/images/google_logo.png" alt="Google Logo" width="50" height="50">
+          <img src="assets/images/github_logo.png" alt="Github Logo" width="50" height="50">
+      </div>
   </form>
-  <div class="text-center mt-5 text-white">Or login with:</div>
-  <div class="flex items-end mt-10">
-    <div class="flex flex-row gap-10 ">
-      <img src="assets/images/google_logo.png" alt="Google Logo" width="50" height="50">
-      <img src="assets/images/github_logo.png" alt="Github Logo" width="50" height="50">
-    </div>
-    </div>
 </div>
 
 
