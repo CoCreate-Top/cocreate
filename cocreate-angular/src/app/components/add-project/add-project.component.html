@@ -20,7 +20,7 @@
   </div>
 </nav>
 <section class="bg-white dark:bg-gray-900">
-  <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+  <div class="mx-auto max-w-2xl py-16 h-screen">
       <h2 class="mb-4 text-4xl font-bold text-gray-900 dark:text-white">Add a new project</h2>
       <form [formGroup]="addProjectForum" (ngSubmit)="submit()" action="#">
           <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
@@ -57,7 +57,7 @@
               <div class="sm:col-span-2">
                 <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="default_size">Add Picture</label>
                 <input formControlName="profilePicture" class="block w-full mb-5 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="default_size" type="file">
-            </div> 
+            </div>
           </div>
           <button type="submit" class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:ring-primary dark:focus:ring-primary hover:bg-green-500">
               Add project
