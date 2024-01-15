@@ -7,7 +7,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './add-project.component.html',
-  styleUrl: './add-project.component.scss'
+  styleUrls:[ './add-project.component.scss']
 })
 export class AddProjectComponent {
   Categories: any = ['Full stack', 'Grafical design', 'Front end', 'Back end']
