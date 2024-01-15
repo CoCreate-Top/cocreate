@@ -10,12 +10,10 @@ import { Project } from '../../interfaces/project';
 })
 export class ProjectsComponent implements OnInit {
   $projects: Observable<Project[]> = of();
-  $project: Observable<Project> = of();
   
   constructor(private projectsService: ProjectsService) {}
 
   ngOnInit() {
     this.$projects = this.projectsService.getProjects();
-    this.$project = this.projectsService.getProject();
   }
 }

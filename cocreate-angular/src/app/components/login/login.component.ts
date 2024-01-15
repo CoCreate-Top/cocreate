@@ -31,7 +31,7 @@ export class LoginComponent {
       next: (res) => {
         console.log(res);
         // TODO: toastr za success
-        this.router.navigateByUrl("");
+        this.router.navigateByUrl("projects");
       },
       error: (err) => {
         console.log(err);
