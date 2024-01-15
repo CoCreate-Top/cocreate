@@ -11,7 +11,7 @@ const routes: Routes = [
   { path: 'add-project', component: AddProjectComponent, pathMatch: 'full' },
   { path: 'profile', component: ProfileComponent, pathMatch: 'full' },
   { path: '',
-    redirectTo: '/register',
+    redirectTo: '/login',
     pathMatch: 'full'
   },
   {
