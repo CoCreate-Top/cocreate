@@ -5,7 +5,6 @@ import { RegisterComponent } from './components/register/register.component';
 import { AddProjectComponent } from './components/add-project/add-project.component';
 import { ProfileComponent } from './components/profile/profile.component';
 
-
 const routes: Routes = [
   { path: 'login', component: LoginComponent, pathMatch: 'full' },
   { path: 'register', component: RegisterComponent, pathMatch: 'full' },

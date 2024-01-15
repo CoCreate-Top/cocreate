@@ -1,19 +1,22 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ProjectsService } from 'src/app/modules/project/services/projects.service';
+import { Project } from 'src/app/modules/project/interfaces/project';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-project',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './add-project.component.html',
-  styleUrls:[ './add-project.component.scss']
+  styleUrls: ['./add-project.component.scss']
 })
 export class AddProjectComponent {
   Categories: any = ['Full stack', 'Grafical design', 'Front end', 'Back end']
   addProjectForum = new FormGroup({
     projectName: new FormControl(),
-    author: new FormControl({value:'Ambrož Klančar', disabled: true}),
+    author: new FormControl({value: "", disabled: true}),
     price: new FormControl(),
     category: new FormControl(),
     numberOfPArticipants: new FormControl(),
@@ -22,14 +25,28 @@ export class AddProjectComponent {
     profilePicture: new FormControl(),
   });
 
-  submit(){
-    console.log(this.addProjectForum.value.projectName)
-    console.log(this.addProjectForum.getRawValue().author)
-    console.log(this.addProjectForum.value.price)
-    console.log(this.addProjectForum.value.category)
-    console.log(this.addProjectForum.value.numberOfPArticipants)
-    console.log(this.addProjectForum.value.expirience)
-    console.log(this.addProjectForum.value.description)
-    console.log(this.addProjectForum.value.profilePicture)
+  constructor(private projectsService: ProjectsService, private router: Router) {}
+
+  submit() {
+    
+  }
+
+  addProject() {
+    if (this.addProjectForum.valid) {
+      this.projectsService.addProject(this.addProjectForum.value as Project).subscribe({
+        next: (res) => {
+          console.log(res);
+          this.router.navigateByUrl("projects");
+        },
+        error: (err) => console.log(err)
+      });
+    } else {
+      console.log("Invalid form!");
+      
+    }
+  }
+
+  discardProject() {
+
   }
 }
