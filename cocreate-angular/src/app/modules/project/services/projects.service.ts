@@ -9,7 +9,7 @@ import { Project } from '../interfaces/project';
 export class ProjectsService {
   apiURL: string = "";
   constructor(private httpClient: HttpClient) {
-    this.apiURL = "http://localhost:8000/api";
+    this.apiURL = "http:/api.cocreate.top/api";
   }
 
   getProject(): Observable<Project> {

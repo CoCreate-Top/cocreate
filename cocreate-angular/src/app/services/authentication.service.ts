@@ -10,7 +10,7 @@ export class AuthenticationService {
 
   constructor(private httpClient: HttpClient) {
     // TODO: zrihtaj api url iz environment spremenljivke
-    this.apiURL = "http://localhost:8000/api";
+    this.apiURL = "http://api.cocreate.top/api";
   }
 
   register(username: string, email: string, password: string): Observable<HttpResponse<any>> {
