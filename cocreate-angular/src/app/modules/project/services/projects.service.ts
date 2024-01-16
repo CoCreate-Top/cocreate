@@ -1,38 +1,35 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, of, tap } from 'rxjs';
-import { Project } from '../interfaces/project';
+import { IProject } from 'src/app/models/project';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectsService {
-  apiURL: string = "";
-  constructor(private httpClient: HttpClient) {
-    this.apiURL = "https://api.cocreate.top/api";
+  apiUrl = "";
+
+  constructor(private http: HttpClient) {
+    this.apiUrl = "http://localhost:8000/api"; // TODO: popravi URLje, da se naložijo iz lokalni spremenljivk: environment.API_URL
   }
 
-  getProject(): Observable<Project> {
-    return of();
+  getProject(id: string): Observable<IProject> {
+    return this.http.get<IProject>(`${this.apiUrl}/db/project/${id}`);
   }
 
-  getProjects(): Observable<Project[]> {
-    return this.httpClient.get<{projects: Project[]}>(`${this.apiURL}/db/project/all`, { withCredentials: true }).pipe(
-      map(res => res.projects)
-    );
+  getProjects(): Observable<IProject[]> {
+    return this.http.get<IProject[]>(`${this.apiUrl}/db/project/all`, { withCredentials: true });
   }
 
-  addProject(project: Project) {
-    return this.httpClient.post(`${this.apiURL}/db/project/new`, project, { withCredentials: true }).pipe(
-      tap(res => console.log(res))
-    );
+  addProject(project: IProject): Observable<IProject> {
+    return this.http.post<IProject>(`${this.apiUrl}/db/project/new`, project);
   }
 
-  editProject(): Observable<Project> {
-    return of();
+  editProject(id: string, project: IProject): Observable<IProject> {
+    return this.http.put<IProject>(`${this.apiUrl}/db/project/${id}`, project);
   }
 
-  deleteProject(): Observable<Project> {
-    return of();
+  deleteProject(id: string): Observable<IProject> {
+    return this.http.delete<IProject>(`${this.apiUrl}/db/project/${id}`);
   }
 }

@@ -19,7 +19,7 @@ export class AuthenticationService {
   }
 
   loginUsername(email: string, password: string): Observable<HttpResponse<any>> {
-    return this.httpClient.post<HttpResponse<any>>(`${this.apiURL}/auth/login`, { email, password }, { withCredentials: true });
+    return this.httpClient.post<HttpResponse<any>>(`${this.apiURL}/auth/login`, { email, password });
   }
 
   loginGoogle() {

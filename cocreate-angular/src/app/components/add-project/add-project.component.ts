@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ProjectsService } from 'src/app/modules/project/services/projects.service';
-import { Project } from 'src/app/modules/project/interfaces/project';
 import { Router } from '@angular/router';
+import { IProject } from 'src/app/models/project';
 
 @Component({
   selector: 'app-add-project',
@@ -33,7 +33,7 @@ export class AddProjectComponent {
 
   addProject() {
     if (this.addProjectForum.valid) {
-      this.projectsService.addProject(this.addProjectForum.value as Project).subscribe({
+      this.projectsService.addProject(this.addProjectForum.value as IProject).subscribe({
         next: (res) => {
           console.log(res);
           this.router.navigateByUrl("projects");

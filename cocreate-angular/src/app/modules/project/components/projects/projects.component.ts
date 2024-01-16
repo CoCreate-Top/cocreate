@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectsService } from '../../services/projects.service';
 import { Observable, of } from 'rxjs';
-import { Project } from '../../interfaces/project';
+import { IProject } from '../../../../models/project';
 
 @Component({
   selector: 'app-projects',
@@ -9,7 +9,7 @@ import { Project } from '../../interfaces/project';
   styleUrls: ['./projects.component.scss']
 })
 export class ProjectsComponent implements OnInit {
-  $projects: Observable<Project[]> = of();
+  $projects: Observable<IProject[]> = of();
   
   constructor(private projectsService: ProjectsService) {}
 

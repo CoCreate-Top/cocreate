@@ -29,7 +29,7 @@ export class LoginComponent {
   login() {
     this.authenticationService.loginUsername(this.loginForm.getRawValue().email, this.loginForm.getRawValue().password).subscribe({
       next: (res) => {
-        console.log(res);
+        console.log("🚀 ~ LoginComponent ~ this.authenticationService.loginUsername ~ res:", res)
         // TODO: toastr za success
         this.router.navigateByUrl("projects");
       },
