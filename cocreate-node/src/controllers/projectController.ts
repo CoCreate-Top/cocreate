@@ -11,7 +11,7 @@ import { Application } from "../models/applicationModel";
 export const getProjects = (req: Request, res: Response) => {
     pool.query('SELECT * FROM "projects"', (error: Error, result: any) => {
         if (error) return res.status(400).json(error);
-        res.status(200).json({ projects: result.rows });
+        res.status(200).json(result.rows);
     });
 };
 
@@ -31,7 +31,7 @@ export const getProject = (req: Request, res: Response) => {
             if (error) return res.status(400).json(error);
             if (result.rowCount === 0)
                 return res.status(404).json({ message: "Project not found" });
-            res.status(200).json({ project: result.rows });
+            res.status(200).json(result.rows);
         }
     );
 };
@@ -50,7 +50,7 @@ export const createProject = (req: Request, res: Response) => {
         [title, req.session.userId, description],
         (error: Error, result: any) => {
             if (error) return res.status(400).json(error);
-            res.status(201).json({ project: result.rows });
+            res.status(201).json(result.rows);
         }
     );
 };
@@ -91,7 +91,7 @@ export const updateProject = (req: Request, res: Response) => {
                 ],
                 (error: Error, result: any) => {
                     if (error) return res.status(400).json(error);
-                    res.status(200).json({ project: result.rows });
+                    res.status(200).json(result.rows);
                 }
             );
         }
