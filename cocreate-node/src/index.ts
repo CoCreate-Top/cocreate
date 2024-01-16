@@ -23,8 +23,8 @@ app.use(session({
     }),
     secret: process.env.ACCESS_TOKEN_SECRET as string,
     resave: false,
-    saveUninitialized: false,
-    cookie: { secure: isProduction() ? true : false, maxAge: 1000 * 60 * 30 , sameSite: 'none'}
+    saveUninitialized: true,
+    cookie: { secure: true, maxAge: 1000 * 60 * 30, sameSite: 'none' }
 }));
 
 // Swagger configuration
@@ -34,7 +34,7 @@ const port = process.env.NODE_PORT || 8000;
 
 app.use(cors({
     origin: function (origin, callback) {
-      const allowedOrigins = ['https://cocreate.top', 'https://api.cocreate.top', 'http://localhost:4200', '93.103.55.194'];
+      const allowedOrigins = ['https://cocreate.top', 'http://localhost:4200'];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
