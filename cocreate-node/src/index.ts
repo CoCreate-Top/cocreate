@@ -34,7 +34,7 @@ const port = process.env.NODE_PORT || 8000;
 
 app.use(cors({
     origin: function (origin, callback) {
-      const allowedOrigins = ['*'];
+      const allowedOrigins = ['https://cocreate.top', 'https://api.cocreate.top', 'http://localhost:4200', '93.103.55.194'];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
