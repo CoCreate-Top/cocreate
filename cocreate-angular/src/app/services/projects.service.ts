@@ -10,7 +10,7 @@ export class ProjectsService {
   apiUrl = "";
 
   constructor(private http: HttpClient) {
-    this.apiUrl = "http://localhost:8000/api"; // TODO: popravi URLje, da se naložijo iz lokalni spremenljivk: environment.API_URL
+    this.apiUrl = "http://api.cocreate.top/api"; // TODO: popravi URLje, da se naložijo iz lokalni spremenljivk: environment.API_URL
   }
 
   getProject(id: string): Observable<IProject> {
