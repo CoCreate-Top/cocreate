@@ -7,6 +7,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ProfileComponent } from './components/profile/profile.component';
+import { ProjectsComponent } from './components/projects/projects.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,9 @@ import { ProfileComponent } from './components/profile/profile.component';
     HttpClientModule,
     LoginComponent,
     RegisterComponent,
-    ProfileComponent
+    ProfileComponent,
+    ProjectsComponent,
+    ProjectsComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -58,6 +58,7 @@ export const userLogin = (req: Request, res: Response) => {
                 if (err) return res.status(500).json({ err });
                 if (result) {
                     req.session.userId = results.rows[0].id;
+                    console.log(req.session.userId);
                     res.status(200).json({message: 'Login successful'});
                 } else {
                     res.status(401).json({error: 'Invalid credentials'});

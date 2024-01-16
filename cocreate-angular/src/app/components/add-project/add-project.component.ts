@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ProjectsService } from 'src/app/modules/project/services/projects.service';
+import { ProjectsService } from 'src/app/services/projects.service';
 import { Router } from '@angular/router';
 import { IProject } from 'src/app/models/project';
 
