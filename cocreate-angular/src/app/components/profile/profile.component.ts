@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ProfileService } from 'src/app/services/profile.service';
 
 @Component({
   selector: 'app-profile',
@@ -9,8 +10,9 @@ import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
   profileForm = new FormGroup({
+    id: new FormControl(),
     firstname: new FormControl(),
     lastname: new FormControl(),
     expirience: new FormControl(),
@@ -20,13 +22,23 @@ export class ProfileComponent {
     socialMediaLinks: new FormControl(),
   });
 
-  submit(){
-    console.log(this.profileForm.value.firstname)
-    console.log(this.profileForm.value.lastname)
-    console.log(this.profileForm.value.expirience)
-    console.log(this.profileForm.value.phone)
-    console.log(this.profileForm.value.email)
-    console.log(this.profileForm.value.location)
-    console.log(this.profileForm.value.socialMediaLinks)
+  constructor (private profileService: ProfileService) {}
+
+  ngOnInit(): void {
+    this.getProfile();
+  }
+
+  getProfile() {
+    this.profileService.getProfile().subscribe({
+      next: (res) => console.log(res),
+      error: (err) => console.log(err)
+    });
+  }
+
+  editProfile() {
+    /* this.profileService.editProfile(id, this.profileForm.value).subscribe({
+      next: (res) => console.log(res),
+      error: (err) => console.log(err)
+    }); */
   }
 }
