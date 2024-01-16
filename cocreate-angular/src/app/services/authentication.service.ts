@@ -10,12 +10,12 @@ export class AuthenticationService {
 
   constructor(private httpClient: HttpClient) {
     // TODO: zrihtaj api url iz environment spremenljivke
-    this.apiURL = "https://api.cocreate.top/api";
+    this.apiURL = "http://localhost:8000/api";
   }
 
   register(username: string, email: string, password: string): Observable<HttpResponse<any>> {
     // TODO: polepšaj poslani object
-    return this.httpClient.post<HttpResponse<any>>(`${this.apiURL}/auth/signup`, { name: username, email: email, password: password });
+    return this.httpClient.post<HttpResponse<any>>(`${this.apiURL}/auth/signup`, { name: username, email: email, password: password }, { withCredentials: true });
   }
 
   loginUsername(email: string, password: string): Observable<HttpResponse<any>> {
@@ -26,8 +26,7 @@ export class AuthenticationService {
 
   }
 
-  // TODO: implement logout
-  logout() {
-
+  logout(): Observable<HttpResponse<any>> {
+    return this.httpClient.post<HttpResponse<any>>(`${this.apiURL}/auth/logout`, { withCredentials: true });
   }
 }
