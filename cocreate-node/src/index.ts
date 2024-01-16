@@ -17,6 +17,18 @@ const app: Express = express();
 
 const PgStore = connectPgSimple(session);
 
+app.use(cors({
+  origin: function (origin, callback) {
+    const allowedOrigins = ['https://cocreate.top', 'http://localhost:4200'];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
 app.use(session({
     store: new PgStore({
         pool: pool,
@@ -24,25 +36,13 @@ app.use(session({
     secret: process.env.ACCESS_TOKEN_SECRET as string,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true, maxAge: 1000 * 60 * 30, sameSite: 'none' }
+    cookie: { secure: true, maxAge: 1000 * 60 * 30, sameSite: 'lax' }
 }));
 
 // Swagger configuration
 const swaggerDocument = require('../swagger/swagger-output.json');
 
 const port = process.env.NODE_PORT || 8000;
-
-app.use(cors({
-    origin: function (origin, callback) {
-      const allowedOrigins = ['https://cocreate.top', 'http://localhost:4200'];
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true
-  }));
 
 app.use(express.json());
 
