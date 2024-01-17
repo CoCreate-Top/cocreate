@@ -7,7 +7,7 @@ import { Profile } from '../models/profile';
   providedIn: 'root'
 })
 export class ProfileService {
-  apiUrl: string = "http://localhost:8000/api";
+  apiUrl: string = "https://api.cocreate.top/api";
 
   constructor(private http: HttpClient) { }
 
