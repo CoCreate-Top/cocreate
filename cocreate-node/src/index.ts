@@ -23,8 +23,8 @@ app.use(session({
     }),
     secret: process.env.ACCESS_TOKEN_SECRET as string,
     resave: false,
-    saveUninitialized: false,
-    cookie: { secure: isProduction() ? true : false, maxAge: 1000 * 60 * 30 }
+    saveUninitialized: true,
+    cookie: { secure: false, maxAge: 1000 * 60 * 30, sameSite: isProduction() ? 'lax' : false }
 }));
 
 // Swagger configuration
@@ -41,7 +41,8 @@ app.use(cors({
         callback(new Error('Not allowed by CORS'));
       }
     },
-    credentials: true
+    credentials: true,
+    maxAge: 9999999999 // TODO: hotfix :glad:
   }));
 
 app.use(express.json());

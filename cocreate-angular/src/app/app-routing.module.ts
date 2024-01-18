@@ -5,6 +5,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { AddProjectComponent } from './components/add-project/add-project.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ProjectsComponent } from './components/projects/projects.component';
+import { ProjectComponent } from './components/project/project.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, pathMatch: 'full' },
@@ -12,7 +13,7 @@ const routes: Routes = [
   { path: 'add-project', component: AddProjectComponent, pathMatch: 'full' },
   { path: 'profile', component: ProfileComponent, pathMatch: 'full' },
   { path: 'projects', component: ProjectsComponent, pathMatch: 'full' },
-  { path: 'project', component: ProjectsComponent, pathMatch: 'full' },
+  { path: 'project/:id', component: ProjectComponent, pathMatch: 'full' },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];
 

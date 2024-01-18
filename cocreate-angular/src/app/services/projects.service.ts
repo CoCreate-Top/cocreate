@@ -32,4 +32,23 @@ export class ProjectsService {
   deleteProject(id: string): Observable<IProject> {
     return this.http.delete<IProject>(`${this.apiUrl}/db/project/${id}`, { withCredentials: true });
   }
+
+  //
+  // Project actions
+  //
+  sendApplication(id: string, profession: string): Observable<IProject> {
+    return this.http.post<any>(`${this.apiUrl}/db/project/${id}`, { profession }, { withCredentials: true });
+  }
+
+  confirmApplication(projectId: string, applicationId: string): Observable<IProject> {
+    return this.http.put<IProject>(`${this.apiUrl}/db/project/${projectId}/confirm`, { id: applicationId }, { withCredentials: true });
+  }
+
+  rejectApplication(id: string, applicationId: string): Observable<IProject> {
+    return this.http.put<IProject>(`${this.apiUrl}/db/project/${id}/reject`, { id: applicationId }, { withCredentials: true });
+  }
+
+  getApplicants(id: string): Observable<IProject> {
+    return this.http.get<IProject>(`${this.apiUrl}/db/project/${id}/applicants`, { withCredentials: true });
+  }
 }

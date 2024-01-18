@@ -8,6 +8,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ProjectsComponent } from './components/projects/projects.component';
+import { HeaderComponent } from './components/header/header.component';
+import { ProjectComponent } from './components/project/project.component';
 
 @NgModule({
   declarations: [
@@ -19,10 +21,12 @@ import { ProjectsComponent } from './components/projects/projects.component';
     AppRoutingModule,
     HttpClientModule,
     LoginComponent,
+    HeaderComponent,
     RegisterComponent,
     ProfileComponent,
     ProjectsComponent,
-    ProjectsComponent
+    ProjectsComponent,
+    ProjectComponent,
   ],
   providers: [],
   bootstrap: [AppComponent]
