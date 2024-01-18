@@ -2,15 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, of, tap } from 'rxjs';
 import { IProject } from 'src/app/models/project';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectsService {
-  apiUrl = "";
+  apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {
-    this.apiUrl = "http://localhost:8000/api"; // TODO: popravi URLje, da se naložijo iz lokalni spremenljivk: environment.API_URL
   }
 
   getProject(id: string): Observable<IProject> {

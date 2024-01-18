@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { IProfile } from 'src/app/interfaces/profile';
+import { ProfileService } from 'src/app/services/profile.service';
 
 @Component({
   selector: 'app-profile',
@@ -9,8 +12,9 @@ import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
   profileForm = new FormGroup({
+    id: new FormControl(),
     firstname: new FormControl(),
     lastname: new FormControl(),
     expirience: new FormControl(),
@@ -20,13 +24,36 @@ export class ProfileComponent {
     socialMediaLinks: new FormControl(),
   });
 
+  constructor(private profileService: ProfileService, private router: Router) {
+  }
+
+  ngOnInit() {
+    sessionStorage
+    this.getProfile();
+  }
+
   submit(){
-    console.log(this.profileForm.value.firstname)
-    console.log(this.profileForm.value.lastname)
-    console.log(this.profileForm.value.expirience)
-    console.log(this.profileForm.value.phone)
-    console.log(this.profileForm.value.email)
-    console.log(this.profileForm.value.location)
-    console.log(this.profileForm.value.socialMediaLinks)
+  }
+
+  getProfile() {
+    this.profileService.getProfile().subscribe({
+      next: (profile) => this.profileForm.setValue(profile),
+      error: (err) => console.log(err)
+    });
+  }
+
+  editProfile() {
+    if (this.profileForm.valid) {
+      this.profileService.editProfile(this.profileForm.value.id, this.profileForm.value as IProfile).subscribe({
+        next: (res) => {
+          console.log(res);
+          this.router.navigateByUrl("projects");
+        },
+        error: (err) => console.log(err)
+      });
+    } else {
+      console.log("Invalid form!");
+      
+    }
   }
 }
