@@ -3,6 +3,7 @@ import { getGithubAccessToken, getGoogleOAuthTokens, upsertUser } from "../servi
 import { googleClientID, origin } from "../config/database";
 import { OAuth2Client } from "google-auth-library";
 import axios from "axios";
+import { log } from "console";
 
 const client = new OAuth2Client(googleClientID);
 
@@ -87,9 +88,12 @@ export function logout(req: Request, res: Response) {
             return res.status(200).json({ message: "Logged out successfully" });
         }
     });
-}
+} 
 
 export function ensureAuthenticated(req: Request, res: Response, next: any) {
+    console.log(req.session.userId);
+    console.log(req.session);
+    
     try {
         if (req.session.userId) {
             next();

@@ -8,9 +8,10 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ProjectsService {
-  apiUrl = environment.apiUrl;
+  apiUrl = "";
 
   constructor(private http: HttpClient) {
+    this.apiUrl = "http://localhost:8000/api";
   }
 
   getProject(id: string): Observable<IProject> {

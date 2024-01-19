@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { ProjectsService } from '../../services/projects.service';
 import { Observable, of, tap } from 'rxjs';
 import { IProject } from '../../models/project';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-projects',
-  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.scss'],
   standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class ProjectsComponent implements OnInit {
   $projects: Observable<IProject[]> = of();

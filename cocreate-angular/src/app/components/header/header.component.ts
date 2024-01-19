@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Router } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule]
 })
 export class HeaderComponent {
 

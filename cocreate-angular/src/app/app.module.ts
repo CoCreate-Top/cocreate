@@ -10,25 +10,33 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { HeaderComponent } from './components/header/header.component';
 import { ProjectComponent } from './components/project/project.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AddProjectComponent } from './components/add-project/add-project.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    
+    AppComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
+    AppRoutingModule,
     LoginComponent,
+    HeaderComponent,
+    RegisterComponent,
     HeaderComponent,
     RegisterComponent,
     ProfileComponent,
     ProjectsComponent,
-    ProjectsComponent,
     ProjectComponent,
+    AddProjectComponent
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [ReactiveFormsModule]
 })
 export class AppModule { }

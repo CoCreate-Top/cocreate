@@ -7,9 +7,11 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  apiUrl = environment.apiUrl;
+  apiUrl = "";
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) {
+    this.apiUrl = "http://localhost:8000/api";
+  }
 
   register(username: string, email: string, password: string): Observable<HttpResponse<any>> {
     // TODO: polepšaj poslani object
@@ -17,7 +19,7 @@ export class AuthenticationService {
   }
 
   loginUsername(email: string, password: string): Observable<HttpResponse<any>> {
-    return this.httpClient.post<HttpResponse<any>>(`${this.apiUrl}/auth/login`, { email, password });
+    return this.httpClient.post<HttpResponse<any>>(`${this.apiUrl}/auth/login`, { email, password }, { withCredentials: true });
   }
 
   loginGoogle() {
@@ -25,6 +27,6 @@ export class AuthenticationService {
   }
 
   logout(): Observable<HttpResponse<any>> {
-    return this.httpClient.post<HttpResponse<any>>(`${this.apiURL}/auth/logout`, { withCredentials: true });
+    return this.httpClient.post<HttpResponse<any>>(`${this.apiUrl}/auth/logout`, { withCredentials: true });
   }
 }

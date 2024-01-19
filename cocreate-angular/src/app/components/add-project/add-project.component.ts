@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProjectsService } from 'src/app/services/projects.service';
 import { Router } from '@angular/router';
 import { IProject } from 'src/app/models/project';
@@ -8,9 +7,9 @@ import { IProject } from 'src/app/models/project';
 @Component({
   selector: 'app-add-project',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './add-project.component.html',
-  styleUrls: ['./add-project.component.scss']
+  styleUrls: ['./add-project.component.scss'],
+  imports: [FormsModule, ReactiveFormsModule]
 })
 export class AddProjectComponent {
   Categories: any = ['Full stack', 'Grafical design', 'Front end', 'Back end']

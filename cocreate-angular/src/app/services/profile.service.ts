@@ -8,9 +8,11 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ProfileService {
-  apiUrl = environment.apiUrl;
+  apiUrl = "";
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.apiUrl = "https://api.cocreate.top/api"; environment.apiUrl;
+  }
 
   getProfile(): Observable<IProfile> {
     return this.http.get<IProfile>(`${this.apiUrl}/db/profile`, { withCredentials: true });

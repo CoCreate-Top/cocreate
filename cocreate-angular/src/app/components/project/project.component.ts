@@ -1,17 +1,15 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Route } from '@angular/router';
-import { switchMap, tap } from 'rxjs';
 import { IProject } from 'src/app/models/project';
 import { ProjectsService } from 'src/app/services/projects.service';
 
 @Component({
   selector: 'app-project',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './project.component.html',
-  styleUrls: ['./project.component.scss']
+  styleUrls: ['./project.component.scss'],
+  imports: [FormsModule, ReactiveFormsModule]
 })
 export class ProjectComponent implements OnInit {
   Categories: any = ['Full stack', 'Grafical design', 'Front end', 'Back end']

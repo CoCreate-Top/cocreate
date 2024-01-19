@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IProfile } from 'src/app/interfaces/profile';
 import { ProfileService } from 'src/app/services/profile.service';
@@ -8,9 +7,9 @@ import { ProfileService } from 'src/app/services/profile.service';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  styleUrls: ['./profile.component.scss'],
+  imports: [FormsModule, ReactiveFormsModule]
 })
 export class ProfileComponent implements OnInit {
   profileForm = new FormGroup({
