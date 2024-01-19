@@ -24,7 +24,7 @@ app.use(session({
     secret: process.env.ACCESS_TOKEN_SECRET as string,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: 'auto', maxAge: 1000 * 60 * 30 }
+    cookie: { secure: false, maxAge: 1000 * 60 * 30, sameSite: isProduction() ? 'lax' : false }
 }));
 
 // Swagger configuration
